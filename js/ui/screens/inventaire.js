@@ -4,10 +4,18 @@
 
 // État de l'écran Inventaire
 const InventaireScreenState = {
-  view: 'menu', // 'menu' | 'comptage' | 'historique'
+  view: 'liste', // 'liste' | 'menu' | 'comptage' | 'historique'
   articles: [],
   boutiques: [],
   ajustements: [],
+  lots: [],
+
+  // Filtres temps réel
+  filter: {
+    boutique: 'all',
+    search: '',
+    type: 'all' // 'all' | 'Inventaire' | 'Correction' | 'Casse' | 'Perte' | 'Retour'
+  },
 
   // État du comptage
   comptage: {
@@ -28,18 +36,26 @@ const InventaireScreenState = {
 };
 
 window.InventaireScreen = async () => {
-  // Charger les données
-  const [articles, boutiques, ajustements] = await Promise.all([
-    ArticleModel.getAll(),
-    BoutiqueModel.getAll(),
-    AjustementStockModel ? AjustementStockModel.getAll() : Promise.resolve([])
-  ]);
+  try {
+    // Charger les données
+    const [articles, boutiques, ajustements, lots] = await Promise.all([
+      ArticleModel.getAll(),
+      BoutiqueModel.getAll(),
+      AjustementStockModel ? AjustementStockModel.getAll() : Promise.resolve([]),
+      LotModel ? LotModel.getAll() : Promise.resolve([])
+    ]);
 
-  InventaireScreenState.articles = articles;
-  InventaireScreenState.boutiques = boutiques;
-  InventaireScreenState.ajustements = ajustements;
+    InventaireScreenState.articles = articles || [];
+    InventaireScreenState.boutiques = boutiques || [];
+    InventaireScreenState.ajustements = ajustements || [];
+    InventaireScreenState.lots = lots || [];
 
-  return renderInventaireMain();
+    return renderInventaireMain();
+  } catch (error) {
+    console.error('Error loading inventaire screen:', error);
+    Helpers.log('error', 'Inventaire screen error', error);
+    return `<div class="error">Erreur lors du chargement de l'inventaire: ${error.message}</div>`;
+  }
 };
 
 /**
@@ -48,13 +64,152 @@ window.InventaireScreen = async () => {
 function renderInventaireMain() {
   const state = InventaireScreenState;
 
-  if (state.view === 'comptage') {
+  if (state.view === 'liste') {
+    return renderInventaireListe();
+  } else if (state.view === 'comptage') {
     return renderComptageInventaire();
   } else if (state.view === 'historique') {
     return renderHistoriqueAjustements();
   } else {
     return renderInventaireMenu();
   }
+}
+
+/**
+ * Vue Liste - Affichage direct des articles avec filtres temps réel
+ */
+function renderInventaireListe() {
+  const state = InventaireScreenState;
+  const filter = state.filter;
+
+  // Filtrer les articles
+  let articlesFiltered = (state.articles || []).filter(a => a.actif !== false);
+
+  // Filtre par boutique
+  if (filter.boutique !== 'all') {
+    articlesFiltered = articlesFiltered.filter(a => a.boutique === filter.boutique);
+  }
+
+  // Filtre par recherche
+  if (filter.search) {
+    const search = filter.search.toLowerCase();
+    articlesFiltered = articlesFiltered.filter(a =>
+      a.nom?.toLowerCase().includes(search) ||
+      a.categorie?.toLowerCase().includes(search)
+    );
+  }
+
+  // Tri par nom
+  articlesFiltered.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
+
+  const stats = {
+    total: articlesFiltered.length,
+    stockTotal: articlesFiltered.reduce((sum, a) => sum + (a.stock_total || 0), 0)
+  };
+
+  return `
+    <div class="inventaire-liste-screen">
+      <div class="screen-header">
+        <h2>Inventaire</h2>
+        <button class="btn btn-secondary btn-sm" onclick="InventaireActions.showMenu()">
+          Menu
+        </button>
+      </div>
+
+      <!-- Statistiques -->
+      <div class="stats-grid mb-md">
+        <div class="stat-card">
+          <div class="stat-card-value">${stats.total}</div>
+          <div class="stat-card-label">Articles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-value">${stats.stockTotal}</div>
+          <div class="stat-card-label">Stock total</div>
+        </div>
+      </div>
+
+      <!-- Filtres -->
+      <div class="card mb-md">
+        <div class="card-body">
+          <div class="form-group mb-sm">
+            <label>Recherche</label>
+            <input
+              type="text"
+              class="form-input"
+              placeholder="Nom de l'article, catégorie..."
+              value="${filter.search}"
+              oninput="InventaireActions.setSearch(this.value)"
+            />
+          </div>
+
+          <div class="filters-row">
+            <select class="form-input" onchange="InventaireActions.setFilterBoutique(this.value)">
+              <option value="all" ${filter.boutique === 'all' ? 'selected' : ''}>Toutes les boutiques</option>
+              ${(state.boutiques || []).map(b => `
+                <option value="${b.nom}" ${filter.boutique === b.nom ? 'selected' : ''}>${b.nom}</option>
+              `).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste des articles -->
+      ${articlesFiltered.length > 0 ? `
+        <div class="card">
+          <div class="card-body" style="padding: 0;">
+            <div class="inventaire-articles-list">
+              ${articlesFiltered.map(article => renderInventaireArticleItem(article)).join('')}
+            </div>
+          </div>
+        </div>
+      ` : `
+        <div class="empty-state">
+          <p>Aucun article trouvé</p>
+          ${filter.search || filter.boutique !== 'all' ? `
+            <button class="btn btn-secondary mt-md" onclick="InventaireActions.resetFilters()">
+              Réinitialiser les filtres
+            </button>
+          ` : ''}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+/**
+ * Item d'article dans la liste inventaire
+ */
+function renderInventaireArticleItem(article) {
+  const stock = article.stock_total || 0;
+  const stockClass = stock <= AppConfig.business.lowStockThreshold ? 'stock-low' : '';
+
+  return `
+    <div class="inventaire-article-item">
+      <div class="inventaire-article-info">
+        <div class="inventaire-article-name">${article.nom}</div>
+        <div class="inventaire-article-meta">
+          <span class="badge badge-sm">${article.categorie || 'Sans catégorie'}</span>
+          <span class="badge badge-sm badge-secondary">${article.boutique || 'N/A'}</span>
+        </div>
+      </div>
+
+      <div class="inventaire-article-stock">
+        <div class="stock-display ${stockClass}">
+          <div class="stock-value">${stock}</div>
+          <div class="stock-label">en stock</div>
+        </div>
+      </div>
+
+      <div class="inventaire-article-actions">
+        <button
+          class="btn btn-sm btn-primary"
+          onclick="InventaireActions.ajusterStock('${article.id}', '${article.nom.replace(/'/g, "\\'")}', ${stock})"
+        >
+          Ajuster
+        </button>
+      </div>
+    </div>
+  `;
 }
 
 /**
@@ -71,6 +226,17 @@ function renderInventaireMenu() {
       </div>
 
       <div class="card-grid">
+        <!-- Carte: Liste des articles -->
+        <div class="card card-clickable" onclick="InventaireActions.showListe()">
+          <div class="card-body text-center">
+            <div class="stat-card-icon" style="background: var(--color-success); color: white; margin: 0 auto;">
+              📦
+            </div>
+            <h3 class="mt-md">Liste des articles</h3>
+            <p class="text-secondary">Ajuster rapidement le stock</p>
+          </div>
+        </div>
+
         <!-- Carte: Nouvel inventaire -->
         <div class="card card-clickable" onclick="InventaireActions.startComptage()">
           <div class="card-body text-center">
@@ -79,17 +245,6 @@ function renderInventaireMenu() {
             </div>
             <h3 class="mt-md">Nouvel inventaire</h3>
             <p class="text-secondary">Compter le stock physique</p>
-          </div>
-        </div>
-
-        <!-- Carte: Ajustement rapide -->
-        <div class="card card-clickable" onclick="InventaireActions.showAjustementRapide()">
-          <div class="card-body text-center">
-            <div class="stat-card-icon" style="background: var(--color-warning); color: white; margin: 0 auto;">
-              ⚡
-            </div>
-            <h3 class="mt-md">Ajustement rapide</h3>
-            <p class="text-secondary">Corriger un article</p>
           </div>
         </div>
 
@@ -370,6 +525,16 @@ window.InventaireActions = {
   /**
    * Navigation
    */
+  showMenu() {
+    InventaireScreenState.view = 'menu';
+    Router.refresh();
+  },
+
+  showListe() {
+    InventaireScreenState.view = 'liste';
+    Router.refresh();
+  },
+
   startComptage() {
     InventaireScreenState.view = 'comptage';
     InventaireScreenState.resetComptage();
@@ -384,6 +549,127 @@ window.InventaireActions = {
   backToMenu() {
     InventaireScreenState.view = 'menu';
     Router.refresh();
+  },
+
+  /**
+   * Filtres temps réel
+   */
+  setSearch(value) {
+    InventaireScreenState.filter.search = value;
+    this.refreshDisplay();
+  },
+
+  setFilterBoutique(value) {
+    InventaireScreenState.filter.boutique = value;
+    this.refreshDisplay();
+  },
+
+  resetFilters() {
+    InventaireScreenState.filter = {
+      boutique: 'all',
+      search: '',
+      type: 'all'
+    };
+    this.refreshDisplay();
+  },
+
+  /**
+   * Rafraîchit l'affichage sans recharger les données
+   */
+  refreshDisplay() {
+    const main = document.getElementById('app-main');
+    if (main) {
+      const content = renderInventaireMain();
+      main.innerHTML = `<div class="screen-container">${content}</div>`;
+    }
+  },
+
+  /**
+   * Ajustement rapide depuis la liste
+   */
+  ajusterStock(articleId, articleNom, stockActuel) {
+    const types = ['Inventaire', 'Correction', 'Casse', 'Perte', 'Retour', 'Autre'];
+
+    UIComponents.showModal(
+      'Ajuster le stock',
+      `
+        <div class="form-group">
+          <label>Article</label>
+          <div class="form-input" disabled>${articleNom}</div>
+        </div>
+        <div class="form-group">
+          <label>Stock actuel</label>
+          <div class="form-input" disabled>${stockActuel} unités</div>
+        </div>
+        <div class="form-group">
+          <label for="ajust-type">Type d'ajustement *</label>
+          <select id="ajust-type" class="form-input">
+            ${types.map(t => `<option value="${t}">${t}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ajust-nouvelle-quantite">Nouvelle quantité *</label>
+          <input
+            type="number"
+            id="ajust-nouvelle-quantite"
+            class="form-input"
+            value="${stockActuel}"
+            min="0"
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="ajust-motif">Motif *</label>
+          <input
+            type="text"
+            id="ajust-motif"
+            class="form-input"
+            placeholder="Ex: Inventaire physique, casse, erreur de saisie..."
+          />
+        </div>
+        <div class="form-group">
+          <label for="ajust-notes">Notes (optionnel)</label>
+          <textarea
+            id="ajust-notes"
+            class="form-input"
+            rows="2"
+            placeholder="Détails supplémentaires..."
+          ></textarea>
+        </div>
+      `,
+      [
+        { label: 'Annuler', class: 'btn-secondary', onclick: 'UIComponents.closeModal()' },
+        { label: 'Enregistrer', class: 'btn-success', onclick: `InventaireActions.confirmAjusterStock('${articleId}')` }
+      ]
+    );
+  },
+
+  async confirmAjusterStock(articleId) {
+    const type = document.getElementById('ajust-type').value;
+    const nouvelleQuantite = parseInt(document.getElementById('ajust-nouvelle-quantite').value) || 0;
+    const motif = document.getElementById('ajust-motif').value.trim();
+    const notes = document.getElementById('ajust-notes').value.trim();
+
+    if (!motif) {
+      UIComponents.showToast('Veuillez indiquer un motif', 'error');
+      return;
+    }
+
+    try {
+      UIComponents.closeModal();
+      UIComponents.showToast('Enregistrement de l\'ajustement...', 'info');
+
+      await AjustementStockModel.ajusterStock(articleId, nouvelleQuantite, type, motif, notes);
+
+      UIComponents.showToast('Ajustement enregistré !', 'success');
+
+      // Recharger les données
+      await Router.navigate('/inventaire');
+
+    } catch (error) {
+      console.error('Erreur ajustement stock:', error);
+      UIComponents.showToast('Erreur : ' + error.message, 'error');
+    }
   },
 
   /**
