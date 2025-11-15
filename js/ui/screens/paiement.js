@@ -5,7 +5,7 @@
 
 window.PaiementScreen = async () => {
   const clients = await ClientModel.getClientsWithDettes();
-  
+
   if (clients.length === 0) {
     return `
       <h2>Encaisser un paiement</h2>
@@ -25,7 +25,7 @@ window.PaiementScreen = async () => {
     </p>
 
     <div class="list">
-      ${"${"}clients.map(c => renderClientItem(c)).join('')}
+      ${clients.map(c => renderClientItem(c)).join('')}
     </div>
   `;
 };
@@ -33,19 +33,19 @@ window.PaiementScreen = async () => {
 function renderClientItem(client) {
   const initial = client.nom_complet ? client.nom_complet[0].toUpperCase() : '?';
   const nomEscaped = client.nom_complet.replace(/'/g, "\\'");
-  
+
   return `
-    <div class="list-item list-item-clickable" onclick="PaiementActions.showPaiementModal('${"${"}client.id}', '${"${"}nomEscaped}', ${"${"}client.solde_du})">
-      <div class="list-item-avatar">${"${"}initial}</div>
+    <div class="list-item list-item-clickable" onclick="PaiementActions.showPaiementModal('${client.id}', '${nomEscaped}', ${client.solde_du})">
+      <div class="list-item-avatar">${initial}</div>
       <div class="list-item-content">
-        <div class="list-item-title">${"${"}client.nom_complet}</div>
+        <div class="list-item-title">${client.nom_complet}</div>
         <div class="list-item-subtitle">
-          ${"${"}client.telephone || 'Pas de téléphone'}
+          ${client.telephone || 'Pas de téléphone'}
         </div>
       </div>
       <div style="text-align: right;">
         <div style="font-weight: 600; color: var(--color-error); font-size: 1.1rem;">
-          ${"${"}Helpers.formatCurrency(client.solde_du)}
+          ${Helpers.formatCurrency(client.solde_du)}
         </div>
         <div style="font-size: 0.75rem; color: var(--color-text-secondary);">
           à encaisser
@@ -122,38 +122,38 @@ window.PaiementActions = {
         <div class="form-group">
           <label>Client</label>
           <div class="form-input" style="background: var(--color-bg-secondary); cursor: not-allowed;" disabled>
-            ${"${"}clientNom}
+            ${clientNom}
           </div>
         </div>
 
         <div class="form-group">
           <label>Montant dû</label>
           <div style="font-size: 1.5rem; font-weight: 700; color: var(--color-error); padding: var(--spacing-sm) 0;">
-            ${"${"}Helpers.formatCurrency(soldeDu)}
+            ${Helpers.formatCurrency(soldeDu)}
           </div>
         </div>
 
         <div class="form-group">
           <label for="paiement-montant">Montant reçu * (XOF)</label>
-          <input 
-            type="number" 
-            id="paiement-montant" 
-            class="form-input" 
+          <input
+            type="number"
+            id="paiement-montant"
+            class="form-input"
             placeholder="Montant encaissé"
             min="0"
-            max="${"${"}soldeDu}"
-            required 
+            max="${soldeDu}"
+            required
           />
           <small class="form-hint">
-            Maximum: ${"${"}Helpers.formatCurrency(soldeDu)}
+            Maximum: ${Helpers.formatCurrency(soldeDu)}
           </small>
         </div>
 
         <div class="form-group">
           <label for="paiement-mode">Mode de paiement *</label>
           <select id="paiement-mode" class="form-input">
-            ${"${"}Object.values(Constants.ModesPaiement).map(mode => `
-              <option value="${"${"}mode}">${"${"}mode}</option>
+            ${Object.values(Constants.ModesPaiement).map(mode => `
+              <option value="${mode}">${mode}</option>
             `).join('')}
           </select>
         </div>
@@ -201,9 +201,9 @@ window.PaiementActions = {
 
         <div class="form-group">
           <label for="paiement-notes">Notes</label>
-          <textarea 
-            id="paiement-notes" 
-            class="form-input" 
+          <textarea
+            id="paiement-notes"
+            class="form-input"
             placeholder="Notes sur ce paiement..."
             rows="2"
           ></textarea>
@@ -211,7 +211,7 @@ window.PaiementActions = {
       `,
       [
         { label: 'Annuler', class: 'btn-secondary', onclick: 'UIComponents.closeModal()' },
-        { label: 'Enregistrer', class: 'btn-primary', onclick: `PaiementActions.confirmPaiement('${"${"}clientId}', ${"${"}soldeDu})` }
+        { label: 'Enregistrer', class: 'btn-primary', onclick: `PaiementActions.confirmPaiement('${clientId}', ${soldeDu})` }
       ]
     );
 
@@ -232,7 +232,7 @@ window.PaiementActions = {
     }
 
     if (montant > soldeDu) {
-      UIComponents.showToast(`Le montant ne peut pas dépasser ${"${"}Helpers.formatCurrency(soldeDu)}`, 'error');
+      UIComponents.showToast(`Le montant ne peut pas dépasser ${Helpers.formatCurrency(soldeDu)}`, 'error');
       return;
     }
 
