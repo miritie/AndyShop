@@ -575,7 +575,12 @@ window.ArticlesActions = {
 
   updateField(field, value) {
     ArticlesScreenState.form[field] = value;
-    Router.refresh();
+    // Mise à jour du bouton submit (activé/désactivé selon validation)
+    const submitBtn = document.querySelector('.article-form-container button.btn-success');
+    if (submitBtn) {
+      const form = ArticlesScreenState.form;
+      submitBtn.disabled = !form.nom || !form.boutique;
+    }
   },
 
   /**
@@ -593,18 +598,19 @@ window.ArticlesActions = {
     }
 
     try {
-      // Prévisualisation immédiate
-      const previewElement = document.getElementById('image-preview');
-      if (previewElement) {
-        ImageUploadService.preview(file, previewElement);
-      }
-
       // Stocker le fichier pour upload lors de la soumission
       ArticlesScreenState.form.imageFile = file;
       ArticlesScreenState.form.image_url = ''; // On va uploader
 
-      UIComponents.showToast('Image sélectionnée', 'success');
-      await Router.refresh();
+      // Prévisualisation immédiate après mise à jour du state
+      // On utilise un petit délai pour laisser le DOM se mettre à jour
+      setTimeout(() => {
+        const previewElement = document.getElementById('image-preview');
+        if (previewElement) {
+          ImageUploadService.preview(file, previewElement);
+          UIComponents.showToast('Image sélectionnée avec succès', 'success');
+        }
+      }, 100);
 
     } catch (error) {
       console.error('Erreur sélection image:', error);
@@ -615,7 +621,13 @@ window.ArticlesActions = {
   removeImage() {
     ArticlesScreenState.form.image_url = '';
     ArticlesScreenState.form.imageFile = null;
-    Router.refresh();
+    // Mise à jour de l'aperçu uniquement
+    const previewElement = document.getElementById('image-preview');
+    if (previewElement) {
+      previewElement.style.backgroundImage = '';
+      previewElement.innerHTML = '<span>Cliquez pour ajouter une image</span>';
+    }
+    ArticlesActions.refreshDisplay();
   },
 
   /**
