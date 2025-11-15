@@ -35,15 +35,20 @@ window.ClientModel = {
       }
     }
 
-    return AirtableService.create(this.tableName, {
+    // Préparer les données (ne pas envoyer les champs vides pour éviter les erreurs 422)
+    const clientData = {
       nom_complet: data.nom_complet,
       telephone: data.telephone,
-      email: data.email || '',
-      adresse: data.adresse || '',
       type_client: data.type_client || Constants.TypesClient.AUTRE,
-      notes: data.notes || '',
       date_creation: new Date().toISOString()
-    });
+    };
+
+    // Ajouter les champs optionnels seulement s'ils sont fournis
+    if (data.email) clientData.email = data.email;
+    if (data.adresse) clientData.adresse = data.adresse;
+    if (data.notes) clientData.notes = data.notes;
+
+    return AirtableService.create(this.tableName, clientData);
   },
 
   /**
