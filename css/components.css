@@ -283,6 +283,22 @@
   padding-left: calc(var(--spacing-md) * 2 + 20px);
 }
 
+/* Input avec bouton */
+.input-with-button {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.input-with-button .form-input {
+  flex: 1;
+}
+
+.input-with-button .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 /* Checkbox et radio */
 .form-checkbox,
 .form-radio {

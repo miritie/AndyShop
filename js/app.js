@@ -35,6 +35,7 @@
     Router.register('/clients', ClientsScreen);
     Router.register('/client/:id', ClientDetailScreen);
     Router.register('/stocks', StocksScreen);
+    Router.register('/inventaire', InventaireScreen);
     Router.register('/lots', LotsScreen);
     Router.register('/articles', ArticlesScreen);
     Router.register('/dettes', DettesScreen);

@@ -314,12 +314,17 @@ function renderWizardStep2() {
 
       <div class="form-group">
         <label for="article-search">Rechercher un article</label>
-        <input
-          type="text"
-          id="article-search"
-          class="form-input"
-          placeholder="Nom de l'article..."
-        />
+        <div class="input-with-button">
+          <input
+            type="text"
+            id="article-search"
+            class="form-input"
+            placeholder="Nom de l'article..."
+          />
+          <button class="btn btn-success btn-sm" onclick="LotsActions.showCreateArticleModal()" title="Créer un nouvel article">
+            + Nouvel article
+          </button>
+        </div>
         <div id="article-search-results" class="autocomplete-results"></div>
       </div>
 
@@ -662,6 +667,107 @@ window.LotsActions = {
         { label: 'Ajouter', class: 'btn-primary', onclick: `LotsActions.confirmAddArticle('${article.id}', '${article.nom.replace(/'/g, "\\'")}')` }
       ]
     );
+  },
+
+  /**
+   * Affiche le modal de création rapide d'article
+   */
+  showCreateArticleModal() {
+    const boutiques = LotsScreenState.boutiques;
+
+    UIComponents.showModal(
+      'Créer un nouvel article',
+      `
+        <div class="form-group">
+          <label for="new-article-nom">Nom de l'article *</label>
+          <input type="text" id="new-article-nom" class="form-input" placeholder="Ex: Nike Air Max 90" autofocus />
+        </div>
+        <div class="form-group">
+          <label for="new-article-boutique">Boutique *</label>
+          <select id="new-article-boutique" class="form-input">
+            <option value="">Sélectionner une boutique</option>
+            ${boutiques.map(b => `<option value="${b.nom}">${b.nom}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="new-article-categorie">Catégorie</label>
+          <input type="text" id="new-article-categorie" class="form-input" placeholder="Ex: Chaussure, Parfum..." />
+        </div>
+        <div class="form-group">
+          <label for="new-article-image">Image (optionnel)</label>
+          <input type="file" id="new-article-image" class="form-input" accept="image/*" />
+          <small class="form-hint">JPG, PNG ou WebP - max 5MB</small>
+        </div>
+        <div class="form-group">
+          <label for="new-article-notes">Notes / Description</label>
+          <textarea id="new-article-notes" class="form-input" rows="3" placeholder="Détails supplémentaires..."></textarea>
+        </div>
+      `,
+      [
+        { label: 'Annuler', class: 'btn-secondary', onclick: 'UIComponents.closeModal()' },
+        { label: 'Créer et ajouter au lot', class: 'btn-success', onclick: 'LotsActions.confirmCreateArticle()' }
+      ]
+    );
+  },
+
+  /**
+   * Crée l'article et l'ajoute directement au lot
+   */
+  async confirmCreateArticle() {
+    const nom = document.getElementById('new-article-nom').value.trim();
+    const boutique = document.getElementById('new-article-boutique').value;
+    const categorie = document.getElementById('new-article-categorie').value.trim();
+    const imageFile = document.getElementById('new-article-image').files[0];
+    const notes = document.getElementById('new-article-notes').value.trim();
+
+    // Validation
+    if (!nom || !boutique) {
+      UIComponents.showToast('Veuillez remplir les champs obligatoires', 'error');
+      return;
+    }
+
+    try {
+      UIComponents.showToast('Création de l\'article en cours...', 'info');
+
+      // Upload de l'image si présente
+      let imageUrl = '';
+      if (imageFile) {
+        try {
+          imageUrl = await ArticleModel.uploadImage(imageFile);
+        } catch (error) {
+          console.error('Erreur upload image:', error);
+          UIComponents.showToast('Attention: Erreur lors de l\'upload de l\'image', 'warning');
+        }
+      }
+
+      // Créer l'article
+      const newArticle = await ArticleModel.create({
+        nom,
+        boutique,
+        categorie,
+        image_url: imageUrl,
+        notes,
+        actif: true
+      });
+
+      // Ajouter l'article à la liste locale
+      LotsScreenState.articles.push(newArticle);
+
+      // Fermer le modal de création
+      UIComponents.closeModal();
+
+      // Afficher le modal d'ajout au lot
+      UIComponents.showToast('Article créé avec succès !', 'success');
+
+      // Attendre un instant puis afficher le modal d'ajout
+      setTimeout(() => {
+        LotsActions.showAddArticleModal(newArticle);
+      }, 500);
+
+    } catch (error) {
+      console.error('Erreur création article:', error);
+      UIComponents.showToast('Erreur : ' + error.message, 'error');
+    }
   },
 
   async confirmAddArticle(articleId, articleNom) {

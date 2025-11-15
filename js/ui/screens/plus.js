@@ -17,6 +17,20 @@ window.PlusScreen = async () => {
           <div class="menu-item-subtitle">Acquisitions & stocks</div>
         </div>
       </div>
+      <div class="menu-item" onclick="Router.navigate('/articles')">
+        <div class="menu-item-icon">🏷️</div>
+        <div class="menu-item-content">
+          <div class="menu-item-title">Articles</div>
+          <div class="menu-item-subtitle">Catalogue produits</div>
+        </div>
+      </div>
+      <div class="menu-item" onclick="Router.navigate('/inventaire')">
+        <div class="menu-item-icon">📋</div>
+        <div class="menu-item-content">
+          <div class="menu-item-title">Inventaire</div>
+          <div class="menu-item-subtitle">Comptage & ajustements</div>
+        </div>
+      </div>
       <div class="menu-item" onclick="Router.navigate('/rapports')">
         <div class="menu-item-icon">📊</div>
         <div class="menu-item-content">

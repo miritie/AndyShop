@@ -23,11 +23,12 @@ window.AppConfig = {
       dettes: "Dettes",
       allocationsPaiement: "Allocations_Paiement",
       relances: "Relances",
+      ajustementsStock: "Ajustements_Stock",
     },
   },
 
   storage: {
-    provider: "local", // 'local' | 'onedrive' | 'googledrive'
+    provider: "googledrive", // 'local' | 'onedrive' | 'googledrive'
     onedrive: {
       clientId: "YOUR_AZURE_CLIENT_ID",
       redirectUri: window.location.origin,

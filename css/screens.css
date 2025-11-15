@@ -1901,3 +1901,54 @@
   height: 20px;
   cursor: pointer;
 }
+
+
+/* ===== ÉCRAN INVENTAIRE ===== */
+.comptage-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.comptage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius-md);
+  border: var(--border-width) solid var(--color-border);
+  gap: var(--spacing-md);
+}
+
+.comptage-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.comptage-item-name {
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-xs);
+}
+
+.comptage-item-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  flex-wrap: wrap;
+}
+
+.comptage-item-notes {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin-top: var(--spacing-xs);
+}
+
+.comptage-item-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
