@@ -4,13 +4,13 @@
  */
 
 :root {
-  /* ===== COULEURS PRINCIPALES ===== */
-  --color-primary: #6366f1;
-  --color-primary-dark: #4f46e5;
-  --color-primary-light: #818cf8;
+  /* ===== COULEURS PRINCIPALES - THÈME ROSE FUCHSIA ===== */
+  --color-primary: #ec4899;        /* Rose fuchsia */
+  --color-primary-dark: #db2777;   /* Rose fuchsia foncé */
+  --color-primary-light: #f9a8d4;  /* Rose fuchsia clair */
 
-  --color-secondary: #ec4899;
-  --color-secondary-dark: #db2777;
+  --color-secondary: #ffffff;      /* Blanc */
+  --color-secondary-dark: #f3f4f6; /* Gris très clair */
 
   /* ===== COULEURS SÉMANTIQUES ===== */
   --color-success: #10b981;
@@ -22,19 +22,19 @@
   --color-info: #3b82f6;
   --color-info-light: #dbeafe;
 
-  /* ===== COULEURS NEUTRES ===== */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f9fafb;
-  --color-bg-tertiary: #f3f4f6;
+  /* ===== COULEURS NEUTRES - THÈME BLANC & ROSE ===== */
+  --color-bg-primary: #ffffff;        /* Blanc pur */
+  --color-bg-secondary: #fdf2f8;      /* Rose très clair (fond secondaire) */
+  --color-bg-tertiary: #fce7f3;       /* Rose ultra clair */
 
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-tertiary: #9ca3af;
-  --color-text-inverse: #ffffff;
+  --color-text-primary: #831843;      /* Rose foncé (texte principal) */
+  --color-text-secondary: #9f1239;    /* Rose moyen (texte secondaire) */
+  --color-text-tertiary: #be185d;     /* Rose clair (texte tertiaire) */
+  --color-text-inverse: #ffffff;      /* Blanc (texte sur fond fuchsia) */
 
-  --color-border: #e5e7eb;
-  --color-border-light: #f3f4f6;
-  --color-border-dark: #d1d5db;
+  --color-border: #fbcfe8;            /* Rose pastel (bordures) */
+  --color-border-light: #fce7f3;      /* Rose ultra clair */
+  --color-border-dark: #f9a8d4;       /* Rose clair */
 
   /* ===== COULEURS BOUTIQUES (par défaut) ===== */
   --color-pinho: #8b5cf6;
@@ -80,11 +80,11 @@
   --border-width: 1px;
   --border-width-thick: 2px;
 
-  /* ===== OMBRES ===== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* ===== OMBRES - THÈME ROSE ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(236, 72, 153, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(236, 72, 153, 0.15), 0 2px 4px -1px rgba(236, 72, 153, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(236, 72, 153, 0.15), 0 4px 6px -2px rgba(236, 72, 153, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(236, 72, 153, 0.15), 0 10px 10px -5px rgba(236, 72, 153, 0.08);
 
   /* ===== TRANSITIONS ===== */
   --transition-fast: 150ms ease;

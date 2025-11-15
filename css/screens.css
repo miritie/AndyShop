@@ -26,7 +26,8 @@
 
 .quick-action-btn {
   height: 64px;
-  background-color: var(--color-bg-primary);
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  border: 2px solid var(--color-border);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-md);
   display: flex;
@@ -37,19 +38,27 @@
   transition: all var(--transition-fast);
 }
 
+.quick-action-btn:hover {
+  border-color: var(--color-primary-light);
+}
+
 .quick-action-btn:active {
   box-shadow: var(--shadow-md);
   transform: scale(0.98);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
 }
 
 .quick-action-icon {
   width: 40px;
   height: 40px;
   border-radius: var(--border-radius-md);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
 }
 
 .quick-action-content {
