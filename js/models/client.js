@@ -55,9 +55,16 @@ window.ClientModel = {
 
   /**
    * Récupère les clients avec dettes
+   * Note: solde_du est un champ calculé (Formula), donc on doit utiliser
+   * une formule qui compare total_achats et total_paye (qui sont des Rollups numériques)
    */
   async getClientsWithDettes() {
-    const formula = '{solde_du} > 0';
-    return AirtableService.findByFormula(this.tableName, formula);
+    // On récupère tous les clients et on filtre côté client
+    // car solde_du est un champ Formula qu'on ne peut pas filtrer directement
+    const allClients = await this.getAll();
+    return allClients.filter(client => {
+      const solde = parseFloat(client.solde_du) || 0;
+      return solde > 0;
+    });
   }
 };

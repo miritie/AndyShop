@@ -64,7 +64,10 @@ window.AirtableService = {
         });
 
         if (!response.ok) {
-          throw new Error(`Airtable API error: ${response.status}`);
+          const errorData = await response.json().catch(() => ({}));
+          const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+          Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+          throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
         }
 
         const data = await response.json();
@@ -100,7 +103,10 @@ window.AirtableService = {
       });
 
       if (!response.ok) {
-        throw new Error(`Airtable API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+        Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+        throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
       }
 
       const data = await response.json();
@@ -131,8 +137,10 @@ window.AirtableService = {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(`Airtable API error: ${JSON.stringify(error)}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+        Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+        throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
       }
 
       const data = await response.json();
@@ -175,8 +183,10 @@ window.AirtableService = {
         });
 
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(`Airtable API error: ${JSON.stringify(error)}`);
+          const errorData = await response.json().catch(() => ({}));
+          const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+          Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+          throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
         }
 
         const data = await response.json();
@@ -212,8 +222,10 @@ window.AirtableService = {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(`Airtable API error: ${JSON.stringify(error)}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+        Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+        throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
       }
 
       const data = await response.json();
@@ -244,7 +256,10 @@ window.AirtableService = {
       });
 
       if (!response.ok) {
-        throw new Error(`Airtable API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error?.message || JSON.stringify(errorData);
+        Helpers.log('error', `Airtable API error ${response.status}`, errorData);
+        throw new Error(`Airtable API error: ${response.status} - ${errorMsg}`);
       }
 
       Helpers.log('info', `Deleted record ${recordId} from ${tableName}`);

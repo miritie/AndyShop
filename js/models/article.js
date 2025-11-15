@@ -26,7 +26,8 @@ window.ArticleModel = {
    * Récupère les articles actifs uniquement
    */
   async getActifs() {
-    const formula = '{actif}=TRUE()';
+    // La bonne syntaxe Airtable pour les checkbox est simplement {actif}
+    const formula = '{actif}';
     return AirtableService.findByFormula(this.tableName, formula);
   },
 

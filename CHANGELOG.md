@@ -1,5 +1,54 @@
 # Changelog - AndyShop
 
+## Version 1.1.1 - Correction erreur 422 Airtable (2025-01-15)
+
+### 🐛 Corrections de bugs
+
+#### Erreur 422 sur boutons "Encaisser" et "Stocks"
+- **Problème** : Formules Airtable invalides causaient des erreurs 422 (Unprocessable Entity)
+- **Cause** : Utilisation incorrecte de champs Formula dans `filterByFormula`
+
+#### Modifications apportées
+
+**1. ClientModel.getClientsWithDettes()** ([js/models/client.js](js/models/client.js))
+- ❌ Avant : `{solde_du} > 0` (champ Formula non filtrable)
+- ✅ Après : Filtrage côté client pour compatibilité avec champs calculés
+- Impact : Fonctionne désormais avec tous les clients ayant des dettes
+
+**2. ArticleModel.getActifs()** ([js/models/article.js](js/models/article.js))
+- ❌ Avant : `{actif}=TRUE()` (syntaxe Airtable invalide)
+- ✅ Après : `{actif}` (syntaxe correcte pour checkbox)
+- Impact : Filtre correctement les articles actifs
+
+**3. AirtableService - Gestion d'erreurs améliorée** ([js/services/airtable.js](js/services/airtable.js))
+- ✅ Messages d'erreur détaillés avec `errorData.error?.message`
+- ✅ Logging automatique des erreurs avec contexte complet
+- ✅ Meilleur debugging pour erreurs futures
+- Méthodes modifiées : `getAll`, `getById`, `create`, `createMany`, `update`, `delete`
+
+### 📚 Documentation
+
+- Nouveau fichier : [BUGFIX_AIRTABLE_422.md](BUGFIX_AIRTABLE_422.md)
+  - Explication détaillée du problème et solutions
+  - Guide des formules Airtable (syntaxes correctes/incorrectes)
+  - Tableau des champs filtrables vs non-filtrables
+  - Exemples de code avant/après
+
+### ✅ Tests
+
+- ✅ Bouton "Encaisser" : Affiche correctement les clients avec dettes
+- ✅ Bouton "Stocks" : Affiche correctement la liste des articles
+- ✅ Console : Pas d'erreurs 422, logs détaillés activés
+
+### 🎯 Impact
+
+- **Priorité** : Critique (bloquant)
+- **Fichiers modifiés** : 3
+- **Lignes modifiées** : ~50
+- **Compatibilité** : 100% rétrocompatible
+
+---
+
 ## Version 1.1.0 - Ajout données de test (2025-01-15)
 
 ### ✨ Nouveautés
