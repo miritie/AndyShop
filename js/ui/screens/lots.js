@@ -193,15 +193,20 @@ function renderWizardStep1() {
 
       <div class="form-group">
         <label for="lot-fournisseur">Fournisseur *</label>
-        <input
-          type="text"
-          id="lot-fournisseur"
-          class="form-input"
-          placeholder="Nom du fournisseur"
-          value="${state.fournisseur}"
-          oninput="LotsActions.updateField('fournisseur', this.value)"
-          list="fournisseurs-list"
-        />
+        <div class="input-with-button">
+          <input
+            type="text"
+            id="lot-fournisseur"
+            class="form-input"
+            placeholder="Nom du fournisseur"
+            value="${state.fournisseur}"
+            oninput="LotsActions.updateField('fournisseur', this.value)"
+            list="fournisseurs-list"
+          />
+          <button class="btn btn-success btn-sm" onclick="LotsActions.showCreateFournisseurModal()" title="Créer un nouveau fournisseur">
+            + Nouveau
+          </button>
+        </div>
         <datalist id="fournisseurs-list">
           ${fournisseurs.map(f => `<option value="${f.nom}">`).join('')}
         </datalist>
@@ -621,6 +626,96 @@ window.LotsActions = {
   updateField(field, value) {
     LotsScreenState.wizard[field] = value;
     Router.refresh();
+  },
+
+  /**
+   * Affiche le modal de création rapide de fournisseur
+   */
+  showCreateFournisseurModal() {
+    UIComponents.showModal(
+      'Créer un nouveau fournisseur',
+      `
+        <div class="form-group">
+          <label for="new-fournisseur-nom">Nom du fournisseur *</label>
+          <input type="text" id="new-fournisseur-nom" class="form-input" placeholder="Ex: Alibaba Trading" autofocus />
+        </div>
+        <div class="form-group">
+          <label for="new-fournisseur-pays">Pays</label>
+          <select id="new-fournisseur-pays" class="form-input">
+            <option value="Local">Local</option>
+            <option value="Extérieur">Extérieur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="new-fournisseur-telephone">Téléphone</label>
+          <input type="tel" id="new-fournisseur-telephone" class="form-input" placeholder="+225 XX XX XX XX XX" />
+        </div>
+        <div class="form-group">
+          <label for="new-fournisseur-email">Email</label>
+          <input type="email" id="new-fournisseur-email" class="form-input" placeholder="contact@fournisseur.com" />
+        </div>
+        <div class="form-group">
+          <label for="new-fournisseur-type-produits">Type de produits</label>
+          <input type="text" id="new-fournisseur-type-produits" class="form-input" placeholder="Ex: Chaussures, Parfums..." />
+        </div>
+        <div class="form-group">
+          <label for="new-fournisseur-notes">Notes</label>
+          <textarea id="new-fournisseur-notes" class="form-input" rows="2" placeholder="Informations complémentaires..."></textarea>
+        </div>
+      `,
+      [
+        { label: 'Annuler', class: 'btn-secondary', onclick: 'UIComponents.closeModal()' },
+        { label: 'Créer et utiliser', class: 'btn-success', onclick: 'LotsActions.confirmCreateFournisseur()' }
+      ]
+    );
+  },
+
+  /**
+   * Crée le fournisseur et l'utilise dans le lot
+   */
+  async confirmCreateFournisseur() {
+    const nom = document.getElementById('new-fournisseur-nom').value.trim();
+    const pays = document.getElementById('new-fournisseur-pays').value;
+    const telephone = document.getElementById('new-fournisseur-telephone').value.trim();
+    const email = document.getElementById('new-fournisseur-email').value.trim();
+    const type_produits = document.getElementById('new-fournisseur-type-produits').value.trim();
+    const notes = document.getElementById('new-fournisseur-notes').value.trim();
+
+    // Validation
+    if (!nom) {
+      UIComponents.showToast('Veuillez saisir le nom du fournisseur', 'error');
+      return;
+    }
+
+    try {
+      UIComponents.showToast('Création du fournisseur en cours...', 'info');
+
+      // Créer le fournisseur
+      const newFournisseur = await FournisseurModel.create({
+        nom,
+        pays,
+        telephone,
+        email,
+        type_produits,
+        notes
+      });
+
+      // Ajouter le fournisseur à la liste locale
+      LotsScreenState.fournisseurs.push(newFournisseur);
+
+      // Utiliser le fournisseur dans le lot
+      LotsScreenState.wizard.fournisseur = newFournisseur.nom;
+
+      UIComponents.closeModal();
+      UIComponents.showToast('Fournisseur créé avec succès !', 'success');
+
+      // Rafraîchir l'affichage
+      await Router.refresh();
+
+    } catch (error) {
+      console.error('Erreur création fournisseur:', error);
+      UIComponents.showToast('Erreur : ' + error.message, 'error');
+    }
   },
 
   nextStep() {
