@@ -39,9 +39,14 @@ window.ClientModel = {
     const clientData = {
       nom_complet: data.nom_complet,
       telephone: data.telephone,
-      type_client: data.type_client || Constants.TypesClient.AUTRE,
-      date_creation: new Date().toISOString()
+      type_client: data.type_client || Constants.TypesClient.AUTRE
     };
+
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    // Si le champ est DateTime, utiliser ISO, sinon utiliser date simple
+    const today = new Date();
+    const dateOnly = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    clientData.date_creation = dateOnly;
 
     // Ajouter les champs optionnels seulement s'ils sont fournis
     if (data.email) clientData.email = data.email;
