@@ -1,3 +1,0 @@
-    <!-- Diagnostic (à retirer après debug) -->
-    <script src="js/diagnostic.js"></script>
-
