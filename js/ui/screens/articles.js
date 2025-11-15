@@ -45,16 +45,22 @@ const ArticlesScreenState = {
 };
 
 window.ArticlesScreen = async () => {
-  // Charger les données
-  const [articles, boutiques] = await Promise.all([
-    ArticleModel.getAll(),
-    BoutiqueModel.getAll()
-  ]);
+  try {
+    // Charger les données
+    const [articles, boutiques] = await Promise.all([
+      ArticleModel.getAll(),
+      BoutiqueModel.getAll()
+    ]);
 
-  ArticlesScreenState.articles = articles;
-  ArticlesScreenState.boutiques = boutiques;
+    ArticlesScreenState.articles = articles || [];
+    ArticlesScreenState.boutiques = boutiques || [];
 
-  return renderArticlesMain();
+    return renderArticlesMain();
+  } catch (error) {
+    console.error('Error loading articles screen:', error);
+    Helpers.log('error', 'Articles screen error', error);
+    return `<div class="error">Erreur lors du chargement des articles: ${error.message}</div>`;
+  }
 };
 
 /**
@@ -79,7 +85,7 @@ function renderArticlesList() {
   const state = ArticlesScreenState;
 
   // Filtrer les articles
-  let articlesFiltered = state.articles;
+  let articlesFiltered = state.articles || [];
 
   if (state.filter.boutique !== 'all') {
     articlesFiltered = articlesFiltered.filter(a => a.boutique === state.filter.boutique);
@@ -105,9 +111,9 @@ function renderArticlesList() {
 
   // Statistiques
   const stats = {
-    total: state.articles.length,
-    actifs: state.articles.filter(a => a.actif).length,
-    inactifs: state.articles.filter(a => !a.actif).length,
+    total: (state.articles || []).length,
+    actifs: (state.articles || []).filter(a => a.actif).length,
+    inactifs: (state.articles || []).filter(a => !a.actif).length,
     categories: state.getCategories().length
   };
 
@@ -158,7 +164,7 @@ function renderArticlesList() {
           <div class="filters-row">
             <select class="form-input" onchange="ArticlesActions.setFilterBoutique(this.value)">
               <option value="all" ${state.filter.boutique === 'all' ? 'selected' : ''}>Toutes les boutiques</option>
-              ${state.boutiques.map(b => `
+              ${(state.boutiques || []).map(b => `
                 <option value="${b.nom}" ${state.filter.boutique === b.nom ? 'selected' : ''}>${b.nom}</option>
               `).join('')}
             </select>
@@ -312,7 +318,7 @@ function renderArticleForm() {
               onchange="ArticlesActions.updateField('boutique', this.value)"
             >
               <option value="">Sélectionner une boutique</option>
-              ${state.boutiques.map(b => `
+              ${(state.boutiques || []).map(b => `
                 <option value="${b.nom}" ${form.boutique === b.nom ? 'selected' : ''}>${b.nom}</option>
               `).join('')}
             </select>
