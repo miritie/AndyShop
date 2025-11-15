@@ -124,19 +124,25 @@ function renderStep1(clients, boutiques) {
     <div class="wizard-content">
       <h3>Sélectionner le client</h3>
 
-      <div class="form-group">
-        <label for="client-search">Rechercher un client</label>
-        <input
-          type="text"
-          id="client-search"
-          class="form-input"
-          placeholder="Nom, téléphone..."
-          value="${state.client ? state.client.nom_complet : ''}"
-        />
-        <div id="client-search-results" class="autocomplete-results"></div>
-      </div>
+      ${!state.client ? `
+        <div class="form-group">
+          <label for="client-search">Rechercher un client</label>
+          <input
+            type="text"
+            id="client-search"
+            class="form-input"
+            placeholder="Nom, téléphone..."
+            autocomplete="off"
+          />
+          <div id="client-search-results" class="autocomplete-results"></div>
+        </div>
 
-      ${state.client ? `
+        <div class="text-center mt-md mb-md">
+          <button class="btn btn-outline" onclick="VenteWizardActions.showNewClientModal()">
+            + Créer un nouveau client
+          </button>
+        </div>
+      ` : `
         <div class="card mb-md">
           <div class="card-body">
             <div class="client-selected">
@@ -152,12 +158,6 @@ function renderStep1(clients, boutiques) {
               </button>
             </div>
           </div>
-        </div>
-      ` : `
-        <div class="text-center mt-md mb-md">
-          <button class="btn btn-outline" onclick="VenteWizardActions.showNewClientModal()">
-            + Créer un nouveau client
-          </button>
         </div>
       `}
 
@@ -182,14 +182,10 @@ function renderStep1(clients, boutiques) {
 
     <script>
       // Configuration de l'autocomplete client
-      setTimeout(() => {
-        FormHelpers.setupAutocomplete(
-          'client-search',
-          ${JSON.stringify(clients)},
-          (client) => VenteWizardActions.selectClient(client),
-          ['nom_complet', 'telephone']
-        );
-      }, 100);
+      (function() {
+        const clients = ${JSON.stringify(clients)};
+        VenteWizardActions.setupClientSearch(clients);
+      })();
     </script>
   `;
 }
@@ -608,17 +604,71 @@ window.VenteWizardActions = {
     Router.navigate('/vente');
   },
 
+  // Sauvegarder la recherche en cours pour pré-remplir le formulaire
+  currentSearch: '',
+
+  setupClientSearch(clients) {
+    const input = document.getElementById('client-search');
+    const resultsDiv = document.getElementById('client-search-results');
+
+    if (!input || !resultsDiv) return;
+
+    const search = Helpers.debounce((query) => {
+      this.currentSearch = query;
+
+      if (!query || query.length < 2) {
+        resultsDiv.innerHTML = '';
+        return;
+      }
+
+      const matches = clients.filter(client => {
+        const nomMatch = client.nom_complet?.toLowerCase().includes(query.toLowerCase());
+        const telMatch = client.telephone?.includes(query);
+        return nomMatch || telMatch;
+      }).slice(0, 10);
+
+      if (matches.length === 0) {
+        resultsDiv.innerHTML = `
+          <div class="autocomplete-empty">
+            Aucun client trouvé
+            <button class="btn btn-primary btn-sm mt-sm" onclick="VenteWizardActions.showNewClientModal()" style="width: 100%;">
+              + Créer "${query}"
+            </button>
+          </div>
+        `;
+      } else {
+        resultsDiv.innerHTML = matches.map(client => `
+          <div class="autocomplete-item" onclick='VenteWizardActions.selectClient(${JSON.stringify(client).replace(/'/g, "\\'")}); event.stopPropagation();'>
+            <div style="font-weight: 500;">${client.nom_complet}</div>
+            <div style="font-size: 0.875rem; color: var(--color-text-secondary);">${client.telephone || 'Pas de téléphone'}</div>
+            ${client.solde_du > 0 ? `<div style="font-size: 0.875rem; color: var(--color-error);">Dette: ${Helpers.formatCurrency(client.solde_du)}</div>` : ''}
+          </div>
+        `).join('');
+      }
+    }, 300);
+
+    input.addEventListener('input', (e) => search(e.target.value));
+    input.focus();
+  },
+
   showNewClientModal() {
+    // Essayer d'extraire nom et téléphone de la recherche
+    const searchValue = this.currentSearch || '';
+    const isPhone = /^\+?[\d\s]+$/.test(searchValue);
+
+    const defaultNom = !isPhone ? searchValue : '';
+    const defaultTel = isPhone ? searchValue : '';
+
     UIComponents.showModal(
       'Nouveau client',
       `
         <div class="form-group">
           <label for="new-client-nom">Nom complet *</label>
-          <input type="text" id="new-client-nom" class="form-input" placeholder="Jean Kouadio" />
+          <input type="text" id="new-client-nom" class="form-input" placeholder="Jean Kouadio" value="${defaultNom}" />
         </div>
         <div class="form-group">
           <label for="new-client-tel">Téléphone *</label>
-          <input type="tel" id="new-client-tel" class="form-input" placeholder="+225 XX XX XX XX XX" />
+          <input type="tel" id="new-client-tel" class="form-input" placeholder="+225 XX XX XX XX XX" value="${defaultTel}" />
         </div>
         <div class="form-group">
           <label for="new-client-type">Type de client</label>
@@ -635,7 +685,14 @@ window.VenteWizardActions = {
       ]
     );
 
-    setTimeout(() => document.getElementById('new-client-nom')?.focus(), 100);
+    // Focus sur le champ vide
+    setTimeout(() => {
+      if (!defaultNom) {
+        document.getElementById('new-client-nom')?.focus();
+      } else if (!defaultTel) {
+        document.getElementById('new-client-tel')?.focus();
+      }
+    }, 100);
   },
 
   async confirmNewClient() {

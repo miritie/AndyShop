@@ -202,6 +202,7 @@
 /* ===== FORMULAIRES ===== */
 .form-group {
   margin-bottom: var(--spacing-md);
+  position: relative;
 }
 
 .form-label {
