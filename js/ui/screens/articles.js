@@ -468,22 +468,22 @@ window.ArticlesActions = {
    */
   setSearch(value) {
     ArticlesScreenState.filter.search = value;
-    Router.refresh();
+    ArticlesActions.refreshDisplay();
   },
 
   setFilterBoutique(value) {
     ArticlesScreenState.filter.boutique = value;
-    Router.refresh();
+    ArticlesActions.refreshDisplay();
   },
 
   setFilterCategorie(value) {
     ArticlesScreenState.filter.categorie = value;
-    Router.refresh();
+    ArticlesActions.refreshDisplay();
   },
 
   setFilterActif(value) {
     ArticlesScreenState.filter.actif = value;
-    Router.refresh();
+    ArticlesActions.refreshDisplay();
   },
 
   resetFilters() {
@@ -493,7 +493,18 @@ window.ArticlesActions = {
       actif: 'all',
       search: ''
     };
-    Router.refresh();
+    ArticlesActions.refreshDisplay();
+  },
+
+  /**
+   * Rafraîchit l'affichage sans recharger les données
+   */
+  refreshDisplay() {
+    const main = document.getElementById('app-main');
+    if (main) {
+      const content = renderArticlesMain();
+      main.innerHTML = `<div class="screen-container">${content}</div>`;
+    }
   },
 
   /**
