@@ -56,6 +56,65 @@ function renderClientItem(client) {
 }
 
 window.PaiementActions = {
+  capturedPhotoUrl: null,
+
+  async capturePhoto() {
+    try {
+      UIComponents.showToast('Ouverture de la caméra...', 'info');
+
+      // Capturer et uploader la photo
+      const url = await GoogleDriveService.captureAndUpload();
+
+      // Sauvegarder l'URL
+      this.capturedPhotoUrl = url;
+
+      // Afficher l'aperçu
+      const previewDiv = document.getElementById('paiement-preuve-preview');
+      const previewImg = document.getElementById('paiement-preuve-img');
+      const inputUrl = document.getElementById('paiement-preuve');
+
+      previewImg.src = url;
+      previewDiv.style.display = 'block';
+      inputUrl.style.display = 'none';
+
+      UIComponents.showToast('Photo capturée et uploadée avec succès', 'success');
+
+    } catch (error) {
+      console.error('Erreur capture photo:', error);
+
+      if (error.message === 'Capture annulée') {
+        return; // Pas de message d'erreur
+      }
+
+      UIComponents.showToast('Erreur: ' + error.message, 'error');
+    }
+  },
+
+  toggleManualUrl() {
+    const inputUrl = document.getElementById('paiement-preuve');
+    const previewDiv = document.getElementById('paiement-preuve-preview');
+
+    if (inputUrl.style.display === 'none') {
+      inputUrl.style.display = 'block';
+      previewDiv.style.display = 'none';
+      this.capturedPhotoUrl = null;
+      inputUrl.focus();
+    } else {
+      inputUrl.style.display = 'none';
+      inputUrl.value = '';
+    }
+  },
+
+  removePhoto() {
+    this.capturedPhotoUrl = null;
+    const previewDiv = document.getElementById('paiement-preuve-preview');
+    const inputUrl = document.getElementById('paiement-preuve');
+
+    previewDiv.style.display = 'none';
+    inputUrl.style.display = 'none';
+    inputUrl.value = '';
+  },
+
   showPaiementModal(clientId, clientNom, soldeDu) {
     UIComponents.showModal(
       'Encaisser paiement',
@@ -100,15 +159,43 @@ window.PaiementActions = {
         </div>
 
         <div class="form-group">
-          <label for="paiement-preuve">Lien preuve (capture/photo)</label>
-          <input 
-            type="url" 
-            id="paiement-preuve" 
-            class="form-input" 
+          <label for="paiement-preuve">Preuve de paiement</label>
+          <div style="display: flex; gap: var(--spacing-sm);">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              style="flex: 1;"
+              onclick="PaiementActions.capturePhoto()"
+            >
+              📷 Prendre une photo
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              style="flex: 1;"
+              onclick="PaiementActions.toggleManualUrl()"
+            >
+              🔗 Saisir un lien
+            </button>
+          </div>
+          <input
+            type="url"
+            id="paiement-preuve"
+            class="form-input"
             placeholder="https://drive.google.com/file/d/..."
+            style="display: none; margin-top: var(--spacing-sm);"
           />
+          <div id="paiement-preuve-preview" style="display: none; margin-top: var(--spacing-sm);">
+            <img id="paiement-preuve-img" style="max-width: 100%; max-height: 200px; border-radius: 8px; border: 2px solid var(--color-border);" />
+            <div style="margin-top: var(--spacing-xs); font-size: 0.875rem; color: var(--color-success);">
+              ✓ Photo capturée
+              <button type="button" onclick="PaiementActions.removePhoto()" style="margin-left: var(--spacing-xs); color: var(--color-error); background: none; border: none; cursor: pointer; text-decoration: underline;">
+                Supprimer
+              </button>
+            </div>
+          </div>
           <small class="form-hint">
-            Optionnel: Lien vers capture écran ou photo du paiement
+            Optionnel: Photo de la preuve du paiement
           </small>
         </div>
 
@@ -134,7 +221,8 @@ window.PaiementActions = {
   async confirmPaiement(clientId, soldeDu) {
     const montant = parseFloat(document.getElementById('paiement-montant').value);
     const mode = document.getElementById('paiement-mode').value;
-    const preuve = document.getElementById('paiement-preuve').value.trim();
+    const preuveManual = document.getElementById('paiement-preuve').value.trim();
+    const preuve = this.capturedPhotoUrl || preuveManual;
     const notes = document.getElementById('paiement-notes').value.trim();
 
     // Validation
@@ -163,6 +251,9 @@ window.PaiementActions = {
       if (notes) paiementData.notes = notes;
 
       await PaiementModel.create(paiementData);
+
+      // Réinitialiser l'URL de la photo capturée
+      this.capturedPhotoUrl = null;
 
       UIComponents.closeModal();
       UIComponents.showToast(Constants.Messages.SUCCESS.PAIEMENT_ENREGISTRE, 'success');
