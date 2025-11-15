@@ -34,9 +34,10 @@ window.AppConfig = {
       folder: "/AndyShop/Preuves",
     },
     googledrive: {
-      apiKey: "YOUR_GOOGLE_API_KEY",
-      clientId: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-      folderId: "YOUR_FOLDER_ID",
+      apiKey: "AIzaSyA4mo1GYGdORwkYtvjKBRnPHxPcWjCjzkU",
+      clientId:
+        "108984429800-o2nbi366i5sk0csk5732jv3v83cd8gth.apps.googleusercontent.com",
+      folderId: "1CvTHXqlVzIsquE0RZJYtSH7jZ6s-PmT",
     },
   },
 
