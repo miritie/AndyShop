@@ -526,9 +526,15 @@ window.ArticlesActions = {
    * Formulaire
    */
   startCreate() {
-    ArticlesScreenState.resetForm();
-    ArticlesScreenState.view = 'create';
-    Router.refresh();
+    try {
+      Helpers.log('info', 'Starting article creation');
+      ArticlesScreenState.resetForm();
+      ArticlesScreenState.view = 'create';
+      Router.refresh();
+    } catch (error) {
+      console.error('Error in startCreate:', error);
+      UIComponents.showToast('Erreur lors de l\'ouverture du formulaire', 'error');
+    }
   },
 
   startEdit(articleId) {
@@ -723,3 +729,10 @@ window.ArticlesActions = {
     }
   }
 };
+
+// Vérification que ArticlesActions est bien défini
+if (typeof window !== 'undefined') {
+  Helpers.log('info', 'ArticlesActions initialized', {
+    methods: Object.keys(window.ArticlesActions).length + ' methods'
+  });
+}
