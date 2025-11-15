@@ -184,7 +184,9 @@ function renderStep1(clients, boutiques) {
       // Configuration de l'autocomplete client
       (function() {
         const clients = ${JSON.stringify(clients)};
-        VenteWizardActions.setupClientSearch(clients);
+        setTimeout(() => {
+          VenteWizardActions.setupClientSearch(clients);
+        }, 0);
       })();
     </script>
   `;
