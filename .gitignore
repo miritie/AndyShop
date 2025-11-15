@@ -18,3 +18,4 @@ Thumbs.db
 # Temporaires
 temp/
 tmp/
+# Variables d'environnement (local)

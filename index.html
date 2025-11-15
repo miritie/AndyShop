@@ -97,7 +97,8 @@
 
     <!-- Scripts -->
     <!-- Configuration (charge depuis config.js en local OU depuis env vars sur Vercel) -->
-    <script src="js/config.js" onerror="console.log('config.js non trouvé, utilisation de config-loader.js')"></script>
+    <script src="js/config.js" onerror="console.log('config.js non trouvé (normal sur Vercel)')"></script>
+    <script src="js/env-config.js" onerror="console.log('env-config.js non trouvé (normal en local)')"></script>
     <script src="js/config-loader.js"></script>
 
     <!-- Utilitaires -->

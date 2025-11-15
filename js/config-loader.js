@@ -22,18 +22,21 @@
 
   /**
    * Charge la configuration depuis les variables d'environnement (Vercel/Netlify)
-   * Les variables sont injectées par Vercel au moment du build
+   * Sur Vercel, les variables sont accessibles via process.env au build
+   * mais pour un site statique, on doit les injecter manuellement
    */
   function loadConfigFromEnv() {
     console.log('[Config] Chargement depuis variables d\'environnement...');
 
+    // Récupération depuis window (injectées par script externe)
+    const apiKey = window.VITE_AIRTABLE_API_KEY || 'NOT_SET';
+    const baseId = window.VITE_AIRTABLE_BASE_ID || 'NOT_SET';
+
     return {
       airtable: {
-        // Sur Vercel, définir ces variables dans Settings > Environment Variables:
-        // - VITE_AIRTABLE_API_KEY
-        // - VITE_AIRTABLE_BASE_ID
-        apiKey: '__VITE_AIRTABLE_API_KEY__',
-        baseId: '__VITE_AIRTABLE_BASE_ID__',
+        // Ces valeurs seront définies dans un script séparé injecté par Vercel
+        apiKey: apiKey,
+        baseId: baseId,
         tables: {
           boutiques: 'Boutiques',
           fournisseurs: 'Fournisseurs',
@@ -104,11 +107,13 @@
     window.AppConfig = loadConfigFromEnv();
 
     // Vérifier que les variables ont bien été injectées
-    if (window.AppConfig.airtable.apiKey.startsWith('__VITE_')) {
+    if (window.AppConfig.airtable.apiKey === 'NOT_SET') {
       console.error('[Config] ❌ ERREUR: Variables d\'environnement non configurées !');
-      console.error('[Config] Sur Vercel, définir:');
-      console.error('[Config] - VITE_AIRTABLE_API_KEY = votre token Airtable');
-      console.error('[Config] - VITE_AIRTABLE_BASE_ID = votre base ID');
+      console.error('[Config] Sur Vercel:');
+      console.error('[Config] 1. Settings > Environment Variables');
+      console.error('[Config] 2. Ajouter VITE_AIRTABLE_API_KEY');
+      console.error('[Config] 3. Ajouter VITE_AIRTABLE_BASE_ID');
+      console.error('[Config] 4. Créer env-config.js avec vos valeurs');
 
       // Afficher un message d'erreur à l'utilisateur
       document.addEventListener('DOMContentLoaded', function() {
