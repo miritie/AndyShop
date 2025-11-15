@@ -76,6 +76,13 @@ window.Router = {
   },
 
   /**
+   * Rafraîchit la route actuelle
+   */
+  refresh() {
+    this.handleRoute();
+  },
+
+  /**
    * Met à jour la navigation active
    */
   updateNavigation(path) {
