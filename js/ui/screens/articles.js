@@ -661,10 +661,14 @@ window.ArticlesActions = {
         nom: form.nom,
         boutique: form.boutique,
         categorie: form.categorie,
-        image_url: imageUrl,
         notes: form.notes,
         actif: form.actif
       };
+
+      // N'ajouter image_url que si elle existe et n'est pas vide
+      if (imageUrl && imageUrl.trim() !== '') {
+        data.image_url = imageUrl;
+      }
 
       if (isEdit) {
         await ArticleModel.update(form.id, data);

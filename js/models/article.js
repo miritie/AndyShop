@@ -51,15 +51,24 @@ window.ArticleModel = {
    * Crée un article
    */
   async create(data) {
-    return AirtableService.create(this.tableName, {
+    // Préparer les données de base
+    const articleData = {
       nom: data.nom,
       boutique: data.boutique,
-      categorie: data.categorie || '',
-      image_url: data.image_url || '',
-      notes: data.notes || '',
-      actif: data.actif !== false,
-      date_creation: new Date().toISOString()
-    });
+      actif: data.actif !== false
+    };
+
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const today = new Date();
+    const dateOnly = today.toISOString().split('T')[0];
+    articleData.date_creation = dateOnly;
+
+    // Ajouter les champs optionnels seulement s'ils sont fournis et non vides
+    if (data.categorie) articleData.categorie = data.categorie;
+    if (data.image_url) articleData.image_url = data.image_url;
+    if (data.notes) articleData.notes = data.notes;
+
+    return AirtableService.create(this.tableName, articleData);
   },
 
   /**
