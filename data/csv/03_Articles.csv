@@ -1,0 +1,22 @@
+nom,boutique,categorie,image_url,notes,actif,date_creation
+Dior Sauvage 100ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Dior,"Parfum homme - Eau de toilette, notes fraîches et boisées",TRUE,2024-01-20
+Chanel N°5 50ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Chanel,"Parfum femme - Classique intemporel, notes florales",TRUE,2024-01-20
+Armani Code 75ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Armani,Parfum homme - Oriental sensuel,TRUE,2024-01-20
+Gucci Bloom 100ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Gucci,Parfum femme - Jardin floral contemporain,TRUE,2024-02-10
+Yves Saint Laurent Black Opium 90ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=YSL,Parfum femme - Gourmand et addictif,TRUE,2024-02-10
+Prada Luna Rossa 100ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Prada,Parfum homme - Frais et aromatique,TRUE,2024-03-01
+Lancôme La Vie Est Belle 75ml,Pinho,Parfum,https://via.placeholder.com/200/8b5cf6/FFFFFF?text=Lancome,Parfum femme - Gourmand floral,TRUE,2024-03-01
+Nike Air Max 90,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Nike,"Baskets sport - Pointures 38-45, coloris blanc/noir",TRUE,2024-01-25
+Adidas Superstar,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Adidas,"Baskets lifestyle - Iconiques, pointures 36-44",TRUE,2024-01-25
+Converse Chuck Taylor,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Converse,"Baskets toile - Classiques, plusieurs coloris",TRUE,2024-02-15
+Puma Suede Classic,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Puma,"Baskets daim - Rétro, pointures 37-43",TRUE,2024-02-15
+Vans Old Skool,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Vans,"Baskets skate - Toile et cuir, pointures 38-45",TRUE,2024-03-05
+Reebok Classic Leather,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=Reebok,Baskets cuir - Confort optimal,TRUE,2024-03-05
+New Balance 574,BelPaire,Chaussure,https://via.placeholder.com/200/f59e0b/FFFFFF?text=NewBalance,Baskets running - Amorti supérieur,TRUE,2024-03-20
+Collier Or 18K Chaîne Fine,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Collier,"Collier en or 18 carats - 45cm, fermoir sécurisé",TRUE,2024-02-05
+Bague Argent Solitaire,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Bague,"Bague argent 925 - Zirconium, tailles 52-58",TRUE,2024-02-05
+Boucles d'Oreilles Créoles Or,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Creoles,"Créoles or 18K - Diamètre 3cm, fermoir clip",TRUE,2024-02-20
+Bracelet Argent Maille,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Bracelet,"Bracelet argent 925 - Maille gourmette, 19cm",TRUE,2024-02-20
+Montre Femme Acier,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Montre,Montre quartz - Bracelet acier inoxydable,TRUE,2024-03-10
+Pendentif Coeur Or Rose,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Pendentif,"Pendentif or rose 14K - Motif cœur, 1.5cm",TRUE,2024-03-10
+Parure Collier + Boucles,Jewely,Bijou,https://via.placeholder.com/200/ec4899/FFFFFF?text=Parure,Set complet argent - Motif floral,TRUE,2024-03-25

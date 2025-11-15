@@ -1,0 +1,139 @@
+# Changelog - AndyShop
+
+## Version 1.1.0 - Ajout données de test (2025-01-15)
+
+### ✨ Nouveautés
+
+#### Jeu de données complet
+- **12 fichiers CSV** prêts à importer dans Airtable
+- **Données cohérentes** couvrant 4 mois d'activité (janvier-avril 2024)
+- **Volume réaliste** : 30 ventes, 20 clients, 21 articles, 10 lots
+
+#### Documentation enrichie
+- `data/IMPORT_GUIDE.md` : Guide pas à pas pour importer les CSV
+- `data/DATA_SUMMARY.md` : Statistiques et insights métier
+- `data/README.md` : Vue d'ensemble des données
+
+#### Contenu des données
+
+**Boutiques (3)**
+- Pinho (Parfums)
+- BelPaire (Chaussures)
+- Jewely (Bijoux)
+
+**Articles (21)**
+- 7 parfums (Dior, Chanel, Armani, Gucci, YSL, Prada, Lancôme)
+- 7 chaussures (Nike, Adidas, Converse, Puma, Vans, Reebok, New Balance)
+- 7 bijoux (colliers, bagues, boucles d'oreilles, bracelets, montres, parures)
+
+**Clients (20)**
+- Profils variés : collègues, voisins, services publics/privés
+- Mix de comportements : bons payeurs, crédit, retards
+
+**Ventes (30)**
+- Période : janvier-avril 2024
+- CA total : ~1 800 000 XOF
+- Mix paiements : cash (45%), mobile money (35%), virement (20%)
+
+**Dettes (12)**
+- 7 soldées
+- 5 actives (~50 000 XOF)
+- Taux de recouvrement : 97%
+
+**Relances (5)**
+- 2 envoyées (traçabilité complète)
+- 3 programmées (clients en retard)
+
+### 📊 Statistiques
+
+- **CA moyen/vente** : 60 000 XOF
+- **Taux d'encaissement** : 83%
+- **Valeur stock** : ~3 500 000 XOF
+- **Marges réalisées** : 23% à 71% selon les lots
+
+### 🎯 Scénarios testables
+
+✅ Ventes cash complètes
+✅ Ventes avec crédit et échéanciers
+✅ Paiements partiels et multiples
+✅ Dettes en retard
+✅ Relances client
+✅ Gestion multi-boutiques
+✅ Lots multi-articles
+✅ Stocks FIFO
+
+---
+
+## Version 1.0.0 - Version initiale (2025-01-15)
+
+### ✨ Fonctionnalités
+
+#### Architecture
+- SPA mobile-first en vanilla JavaScript
+- 11 écrans fonctionnels
+- Routeur hash-based
+- État global centralisé
+
+#### Services
+- Service Airtable (CRUD complet)
+- Service Storage (OneDrive/Drive/Local)
+- Service WhatsApp (génération messages)
+- Service PDF (factures/reçus HTML)
+- Service Analytics (CA, marges, stats)
+
+#### Modèles
+- 8 entités métier (Boutique, Article, Lot, Client, Vente, Paiement, Dette, Relance)
+- Validation des données
+- Méthodes CRUD
+
+#### UI/UX
+- Design mobile-first responsive
+- 5 fichiers CSS organisés
+- Composants réutilisables (toast, modal, cards)
+- Navigation bottom (mobile) + side (desktop)
+
+#### Documentation
+- README complet
+- QUICKSTART (5 étapes)
+- ARCHITECTURE technique
+- AIRTABLE_SCHEMA (12 tables)
+
+### 📦 Livrables
+
+- 43 fichiers sources
+- 5 fichiers documentation
+- Structure projet complète
+
+### 🔧 Points d'extension
+
+- OneDrive/Google Drive (placeholders prêts)
+- WhatsApp Business API (commentaires détaillés)
+- jsPDF (structure prête)
+
+---
+
+## Roadmap
+
+### Version 1.2.0 (à venir)
+- [ ] Complétion écrans PLACEHOLDER
+  - [ ] Wizard vente multi-étapes
+  - [ ] Flux paiement complet
+  - [ ] Gestion lots détaillée
+  - [ ] Dettes & relances avancées
+  - [ ] Rapports avec graphiques
+- [ ] Intégration OneDrive réelle
+- [ ] Génération PDF avec jsPDF
+
+### Version 2.0.0 (futur)
+- [ ] Authentification multi-utilisateurs
+- [ ] Gestion des rôles
+- [ ] PWA (mode offline)
+- [ ] Notifications push
+- [ ] Export Excel
+- [ ] Mode dark
+- [ ] Internationalisation (i18n)
+- [ ] Tests automatisés
+
+---
+
+**Changelog maintenu à jour à chaque release**

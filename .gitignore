@@ -1,0 +1,20 @@
+# Configuration locale (contient les clés API)
+js/config.js
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporaires
+temp/
+tmp/

@@ -1,0 +1,13 @@
+reference,client,date_paiement,montant,mode_paiement,preuve_url,notes
+PAY-2024-001,Adjoua Marie-Claire,2024-02-28 16:00,32000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-001,Solde vente VTE-2024-002
+PAY-2024-002,N'Guessan Patrick,2024-02-29 09:30,66000,Cash,,Paiement fin de mois VTE-2024-007
+PAY-2024-003,Sanogo Mariam,2024-03-18 14:15,29000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-003,Deuxième versement VTE-2024-012
+PAY-2024-004,Bamba Moussa,2024-03-05 10:00,15000,Cash,,Premier versement VTE-2024-015
+PAY-2024-005,Coulibaly Awa,2024-03-22 15:30,20000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-005,Paiement partiel VTE-2024-019
+PAY-2024-006,Adjoua Marie-Claire,2024-03-25 11:00,25000,Cash,,Versement sur VTE-2024-022
+PAY-2024-007,Traoré Aminata,2024-03-28 16:45,30000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-007,Solde VTE-2024-006
+PAY-2024-008,N'Guessan Patrick,2024-03-30 09:15,48000,Virement,,Paiement VTE-2024-027
+PAY-2024-009,Bamba Moussa,2024-04-02 14:00,10000,Cash,,Deuxième versement VTE-2024-015
+PAY-2024-010,Ouattara Seydou,2024-04-05 10:30,45000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-010,Versement VTE-2024-009
+PAY-2024-011,Traoré Aminata,2024-04-08 15:00,40000,Cash,,Paiement complet VTE-2024-024
+PAY-2024-012,Sanogo Mariam,2024-04-10 11:30,20000,Mobile Money,https://via.placeholder.com/400x300/10b981/FFFFFF?text=Preuve+PAY-012,Paiement partiel VTE-2024-030

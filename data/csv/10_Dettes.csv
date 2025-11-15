@@ -1,0 +1,13 @@
+client,vente,montant_initial,date_creation,echeancier,notes
+Adjoua Marie-Claire,VTE-2024-002,32000,2024-01-23,"[{""date"":""2024-02-28"",""montant"":32000}]",Dette soldée - Paiement reçu le 28/02
+Traoré Aminata,VTE-2024-006,30000,2024-02-03,"[{""date"":""2024-03-03"",""montant"":30000}]",Dette soldée - Paiement reçu le 28/03
+N'Guessan Patrick,VTE-2024-007,66000,2024-02-06,"[{""date"":""2024-02-29"",""montant"":66000}]",Dette soldée - Paiement cash fin février
+Ouattara Seydou,VTE-2024-009,46000,2024-02-10,"[{""date"":""2024-03-10"",""montant"":23000},{""date"":""2024-04-10"",""montant"":23000}]",1 versement reçu - Reste 1000 XOF
+Sanogo Mariam,VTE-2024-012,29000,2024-02-18,"[{""date"":""2024-03-18"",""montant"":29000}]",Dette soldée - Paiement mobile money
+Bamba Moussa,VTE-2024-015,25000,2024-02-25,"[{""date"":""2024-03-25"",""montant"":10000},{""date"":""2024-04-25"",""montant"":10000},{""date"":""2024-05-25"",""montant"":5000}]",2 versements reçus - Prochain 25/05
+Coulibaly Awa,VTE-2024-019,15000,2024-03-08,"[{""date"":""2024-04-08"",""montant"":15000}]",1 versement reçu - Reste -5000 (trop-perçu)
+Adjoua Marie-Claire,VTE-2024-022,32000,2024-03-15,"[{""date"":""2024-04-15"",""montant"":32000}]",1 versement de 25000 - Reste 7000 XOF (en retard)
+Traoré Aminata,VTE-2024-024,40000,2024-03-20,"[{""date"":""2024-04-20"",""montant"":40000}]",Dette soldée - Paiement cash 08/04
+N'Guessan Patrick,VTE-2024-027,48000,2024-03-28,"[{""date"":""2024-04-30"",""montant"":48000}]",Dette soldée - Virement reçu 30/03
+Ouattara Seydou,VTE-2024-028,45000,2024-03-30,"[{""date"":""2024-04-15"",""montant"":22500},{""date"":""2024-04-30"",""montant"":22500}]",1ère échéance en retard - Relance nécessaire
+Sanogo Mariam,VTE-2024-030,20000,2024-04-05,"[{""date"":""2024-04-20"",""montant"":20000}]",1 versement de 20000 - Dette soldée

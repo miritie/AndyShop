@@ -1,0 +1,108 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        FICHIERS CSV - ANDYSHOP                                ║
+║                     Jeu de données de test complet                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📁 Dossier : /data/csv/
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ FICHIER                        │ LIGNES │ DESCRIPTION                        │
+├────────────────────────────────┼────────┼────────────────────────────────────┤
+│ 01_Boutiques.csv               │   3    │ Pinho, BelPaire, Jewely            │
+│ 02_Fournisseurs.csv            │   5    │ Grossistes locaux et internationaux│
+│ 03_Articles.csv                │  21    │ Parfums, chaussures, bijoux        │
+│ 04_Clients.csv                 │  20    │ Base clients mutualisée            │
+│ 05_Lots.csv                    │  10    │ Acquisitions groupées              │
+│ 06_Lignes_Lot.csv              │  25    │ Composition des lots               │
+│ 07_Ventes.csv                  │  30    │ Transactions jan-avril 2024        │
+│ 08_Lignes_Vente.csv            │  40    │ Détail articles vendus             │
+│ 09_Paiements.csv               │  12    │ Encaissements tracés               │
+│ 10_Dettes.csv                  │  12    │ Crédits avec échéanciers JSON      │
+│ 11_Allocations_Paiement.csv    │  12    │ Liaisons paiements ↔ dettes        │
+│ 12_Relances.csv                │   5    │ Relances programmées/envoyées      │
+├────────────────────────────────┼────────┼────────────────────────────────────┤
+│ TOTAL                          │ 195    │ 12 fichiers CSV                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         ORDRE D'IMPORTATION                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANT : Respecter cet ordre pour éviter les erreurs de relations !
+
+  1️⃣  Boutiques          (base - pas de dépendances)
+  2️⃣  Fournisseurs       (base - pas de dépendances)
+  3️⃣  Articles           (→ Boutiques)
+  4️⃣  Clients            (base - pas de dépendances)
+  5️⃣  Lots               (→ Fournisseurs)
+  6️⃣  Lignes_Lot         (→ Lots + Articles)
+  7️⃣  Ventes             (→ Clients + Boutiques)
+  8️⃣  Lignes_Vente       (→ Ventes + Articles + Lignes_Lot)
+  9️⃣  Paiements          (→ Clients)
+  🔟 Dettes             (→ Clients + Ventes)
+  1️⃣1️⃣ Allocations_Paiement (→ Paiements + Dettes)
+  1️⃣2️⃣ Relances           (→ Clients + Dettes)
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          STATISTIQUES GLOBALES                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 CHIFFRE D'AFFAIRES
+   • CA total :           ~1 800 000 XOF
+   • CA Pinho :           ~750 000 XOF (13 ventes)
+   • CA BelPaire :        ~685 000 XOF (11 ventes)
+   • CA Jewely :          ~365 000 XOF (6 ventes)
+
+💰 ENCAISSEMENTS
+   • Total encaissé :     ~1 500 000 XOF (83%)
+   • Cash :               ~810 000 XOF (45%)
+   • Mobile Money :       ~630 000 XOF (35%)
+   • Virement :           ~360 000 XOF (20%)
+
+⚠️  DETTES
+   • Dettes soldées :     7 dettes
+   • Dettes actives :     5 dettes (~50 000 XOF)
+   • Taux recouvrement :  97%
+
+📦 STOCKS
+   • Valeur totale :      ~3 500 000 XOF
+   • Articles actifs :    21 articles
+   • Lots actifs :        10 lots
+
+👥 CLIENTS
+   • Total clients :      20 clients
+   • Clients débiteurs :  5 clients
+   • Top client :         Diabaté Mamadou (245 000 XOF)
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          FICHIERS DOCUMENTATION                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📄 IMPORT_GUIDE.md      Guide pas à pas pour importer les CSV dans Airtable
+📄 DATA_SUMMARY.md      Statistiques détaillées et insights métier
+📄 README.md            Vue d'ensemble des données de test
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          SCÉNARIOS DE TEST                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ Ventes cash complètes
+✅ Ventes avec crédit et échéanciers
+✅ Paiements partiels et multiples
+✅ Dettes en retard
+✅ Relances client (amicales et fermes)
+✅ Gestion multi-boutiques
+✅ Lots multi-articles
+✅ Stocks FIFO (traçabilité lot d'origine)
+✅ Génération factures/reçus
+✅ Calculs CA et marges
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                 PRÊT !                                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🚀 Toutes les données sont prêtes à être importées dans Airtable !
+
+👉 Lire IMPORT_GUIDE.md pour les instructions détaillées
+👉 Consulter DATA_SUMMARY.md pour les statistiques complètes
+

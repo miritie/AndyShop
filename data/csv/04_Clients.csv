@@ -1,0 +1,21 @@
+nom_complet,telephone,email,adresse,type_client,notes,date_creation
+Kouadio Jean-Baptiste,+225 07 12 34 56,kouadio.jean@gmail.com,"Cocody, Abidjan",Collègue,"Collègue du bureau - Paie généralement cash, bon client",2024-01-15
+Adjoua Marie-Claire,+225 05 98 76 54,adjoua.marie@yahoo.fr,"Yopougon, Abidjan",Voisin,"Voisine - Achète régulièrement, préfère le crédit",2024-01-16
+Brou André,+225 01 23 45 67,brou.andre@entreprise.ci,"Plateau, Abidjan",Service public,"Travaille à la mairie - Gros acheteur, toujours à jour",2024-01-18
+Koné Fatou,+225 07 88 99 00,kone.fatou@gmail.com,"Abobo, Abidjan",Collègue,Collègue RH - Achats réguliers de parfums,2024-01-22
+Diabaté Mamadou,+225 05 11 22 33,diabate.m@outlook.com,"Marcory, Abidjan",Service privé,"Directeur PME - Gros budget, paiements par virement",2024-01-25
+Traoré Aminata,+225 07 44 55 66,aminata.traore@email.ci,"Cocody, Abidjan",Voisin,"Achète pour elle et sa famille, crédit court terme",2024-02-01
+N'Guessan Patrick,+225 01 77 88 99,nguessan.p@company.ci,"Plateau, Abidjan",Service public,Fonctionnaire - Paie toujours en fin de mois,2024-02-05
+Yao Brigitte,+225 05 33 44 55,yao.brigitte@gmail.com,"Treichville, Abidjan",Collègue,"Collègue marketing - Passionnée de mode, achats fréquents",2024-02-10
+Ouattara Seydou,+225 07 66 77 88,ouattara.seydou@yahoo.fr,"Adjamé, Abidjan",Autre,"Commerçant - Achète en gros pour revendre, négociateur",2024-02-15
+Kouassi Sylvie,+225 01 99 00 11,kouassi.sylvie@gmail.com,"Cocody, Abidjan",Service privé,"Directrice boutique - Fidèle, aime les nouveautés",2024-02-20
+Diallo Ibrahim,+225 05 22 33 44,diallo.ibrahim@email.ci,"Port-Bouët, Abidjan",Service public,"Agent des impôts - Paiements réguliers, pas de retard",2024-02-25
+Sanogo Mariam,+225 07 55 66 77,sanogo.mariam@outlook.com,"Yopougon, Abidjan",Voisin,"Infirmière - Horaires flexibles, crédit apprécié",2024-03-01
+Touré Issouf,+225 01 44 55 66,toure.issouf@company.ci,"Plateau, Abidjan",Service privé,Cadre bancaire - Gros pouvoir d'achat,2024-03-05
+Konan Stéphanie,+225 05 77 88 99,konan.stephanie@gmail.com,"Marcory, Abidjan",Collègue,"Collègue IT - Achète beaucoup de baskets, ponctuels",2024-03-10
+Bamba Moussa,+225 07 11 22 33,bamba.moussa@yahoo.fr,"Abobo, Abidjan",Autre,"Enseignant - Budget limité, crédit sur 2-3 mois",2024-03-15
+Camara Aïcha,+225 01 88 99 00,camara.aicha@email.ci,"Cocody, Abidjan",Service public,Responsable administrative - Achats occasionnels,2024-03-20
+Doumbia Lassina,+225 05 66 77 88,doumbia.lassina@gmail.com,"Treichville, Abidjan",Autre,"Chauffeur taxi - Petits achats, fidèle",2024-03-25
+Coulibaly Awa,+225 07 99 00 11,coulibaly.awa@outlook.com,"Yopougon, Abidjan",Voisin,Coiffeuse - Achète pour clients et elle-même,2024-03-28
+Koffi Martin,+225 01 33 44 55,koffi.martin@company.ci,"Plateau, Abidjan",Service privé,"Avocat - Budget élevé, exigent sur qualité",2024-04-01
+Soumahoro Aminata,+225 05 55 66 77,soumahoro.aminata@gmail.com,"Cocody, Abidjan",Collègue,"Collègue comptabilité - Prudente, calcule tout",2024-04-05
