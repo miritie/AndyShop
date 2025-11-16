@@ -9,10 +9,15 @@ window.VenteModel = {
   async create(data) {
     // Crée la vente
     const reference = Helpers.generateReference('vente', Date.now());
+
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const today = new Date();
+    const dateOnly = today.toISOString().split('T')[0];
+
     const vente = await AirtableService.create(this.tableName, {
       reference,
       client: [data.clientId],
-      date_vente: new Date().toISOString(),
+      date_vente: dateOnly,
       montant_total: data.montantTotal,
       montant_paye_initial: data.montantPaye,
       boutique_principale: data.boutiqueId ? [data.boutiqueId] : []

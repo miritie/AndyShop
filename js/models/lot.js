@@ -41,11 +41,15 @@ window.LotModel = {
     // Calculer le coût total
     const coutTotal = (data.montant_global || 0) + (data.frais_divers || 0);
 
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const dateAchat = data.date_achat ? new Date(data.date_achat) : new Date();
+    const dateOnly = dateAchat.toISOString().split('T')[0];
+
     // Créer le lot
     const lot = await AirtableService.create(this.tableName, {
       reference,
       fournisseur: data.fournisseur,
-      date_achat: data.date_achat || new Date().toISOString(),
+      date_achat: dateOnly,
       lieu_achat: data.lieu_achat || Constants.LieuxAchat.LOCAL,
       devise: data.devise || Constants.Devises.XOF,
       montant_global: data.montant_global,

@@ -35,9 +35,13 @@ window.RelanceModel = {
    * Crée une relance
    */
   async create(data) {
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const dateProgrammee = data.date_programmee ? new Date(data.date_programmee) : new Date();
+    const dateOnly = dateProgrammee.toISOString().split('T')[0];
+
     return AirtableService.create(this.tableName, {
       ...data,
-      date_programmee: data.date_programmee || new Date().toISOString(),
+      date_programmee: dateOnly,
       statut: data.statut || Constants.StatutsRelance.PROGRAMMEE
     });
   },
@@ -53,9 +57,13 @@ window.RelanceModel = {
    * Marque une relance comme envoyée
    */
   async markAsEnvoyee(id) {
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const today = new Date();
+    const dateOnly = today.toISOString().split('T')[0];
+
     return this.update(id, {
       statut: Constants.StatutsRelance.ENVOYEE,
-      date_envoyee: new Date().toISOString()
+      date_envoyee: dateOnly
     });
   }
 };

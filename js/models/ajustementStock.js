@@ -57,17 +57,26 @@ window.AjustementStockModel = {
    * @returns {Promise<Object>} L'ajustement créé
    */
   async create(data) {
-    return AirtableService.create(this.tableName, {
+    // Préparer les données de base
+    const ajustementData = {
       article: [data.articleId], // Link to Article
       type: data.type,
       quantite_avant: data.quantite_avant,
       quantite_apres: data.quantite_apres,
       difference: data.quantite_apres - data.quantite_avant,
-      date_ajustement: data.date_ajustement || new Date().toISOString(),
-      motif: data.motif || '',
-      notes: data.notes || '',
       utilisateur: data.utilisateur || 'Admin'
-    });
+    };
+
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const dateAjustement = data.date_ajustement ? new Date(data.date_ajustement) : new Date();
+    const dateOnly = dateAjustement.toISOString().split('T')[0];
+    ajustementData.date_ajustement = dateOnly;
+
+    // Ajouter les champs optionnels seulement s'ils sont fournis et non vides
+    if (data.motif) ajustementData.motif = data.motif;
+    if (data.notes) ajustementData.notes = data.notes;
+
+    return AirtableService.create(this.tableName, ajustementData);
   },
 
   /**
@@ -86,15 +95,14 @@ window.AjustementStockModel = {
       const article = await ArticleModel.getById(articleId);
       const quantiteAvant = article.stock_total || 0;
 
-      // Créer l'ajustement
+      // Créer l'ajustement (date_ajustement sera formatée dans create())
       const ajustement = await this.create({
         articleId,
         type,
         quantite_avant: quantiteAvant,
         quantite_apres: nouvelleQuantite,
         motif,
-        notes,
-        date_ajustement: new Date().toISOString()
+        notes
       });
 
       // Note: Le stock réel sera mis à jour via les lignes de lot
@@ -129,8 +137,7 @@ window.AjustementStockModel = {
           quantite_avant: stockTheorique,
           quantite_apres: stockPhysique,
           motif: 'Inventaire physique',
-          notes: comptage.notes || `Écart de ${Math.abs(stockTheorique - stockPhysique)} unité(s)`,
-          date_ajustement: new Date().toISOString()
+          notes: comptage.notes || `Écart de ${Math.abs(stockTheorique - stockPhysique)} unité(s)`
         });
 
         ajustements.push(ajustement);

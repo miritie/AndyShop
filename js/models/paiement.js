@@ -32,9 +32,13 @@ window.PaiementModel = {
     const paiementData = {
       client: data.client,
       montant: data.montant,
-      mode_paiement: data.mode_paiement || Constants.ModesPaiement.CASH,
-      date_paiement: data.date_paiement || new Date().toISOString()
+      mode_paiement: data.mode_paiement || Constants.ModesPaiement.CASH
     };
+
+    // Airtable Date field (sans heure) attend format YYYY-MM-DD
+    const datePaiement = data.date_paiement ? new Date(data.date_paiement) : new Date();
+    const dateOnly = datePaiement.toISOString().split('T')[0];
+    paiementData.date_paiement = dateOnly;
 
     // Ajouter les champs optionnels seulement s'ils sont fournis
     if (data.preuve_url) paiementData.preuve_url = data.preuve_url;
