@@ -57,13 +57,19 @@ window.AjustementStockModel = {
    * @returns {Promise<Object>} L'ajustement créé
    */
   async create(data) {
+    // Validation de base
+    if (!data.articleId) {
+      throw new Error('articleId est requis pour créer un ajustement');
+    }
+
     // Préparer les données de base
     const ajustementData = {
-      article: [data.articleId], // Link to Article
+      article: [data.articleId], // Link to Article record
       type: data.type,
-      quantite_avant: data.quantite_avant,
-      quantite_apres: data.quantite_apres,
-      difference: data.quantite_apres - data.quantite_avant,
+      quantite_avant: data.quantite_avant || 0,
+      quantite_apres: data.quantite_apres || 0,
+      difference: (data.quantite_apres || 0) - (data.quantite_avant || 0),
+      motif: data.motif || '',
       utilisateur: data.utilisateur || 'Admin'
     };
 
@@ -72,9 +78,13 @@ window.AjustementStockModel = {
     const dateOnly = dateAjustement.toISOString().split('T')[0];
     ajustementData.date_ajustement = dateOnly;
 
-    // Ajouter les champs optionnels seulement s'ils sont fournis et non vides
-    if (data.motif) ajustementData.motif = data.motif;
-    if (data.notes) ajustementData.notes = data.notes;
+    // Ajouter les notes si fournies
+    if (data.notes) {
+      ajustementData.notes = data.notes;
+    }
+
+    // Log pour debug
+    console.log('Creating ajustement with data:', JSON.stringify(ajustementData, null, 2));
 
     return AirtableService.create(this.tableName, ajustementData);
   },
