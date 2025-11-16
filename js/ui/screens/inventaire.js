@@ -193,19 +193,44 @@ function renderInventaireArticleItem(article) {
         </div>
       </div>
 
-      <div class="inventaire-article-stock">
-        <div class="stock-display ${stockClass}">
-          <div class="stock-value">${stock}</div>
-          <div class="stock-label">en stock</div>
+      <div class="inventaire-article-stock-controls">
+        <button
+          class="btn-stock-adjust btn-minus"
+          onclick="InventaireActions.ajusterStockRapide('${article.id}', ${stock}, -1)"
+          title="Diminuer le stock"
+        >
+          −
+        </button>
+
+        <div class="stock-input-wrapper ${stockClass}">
+          <input
+            type="number"
+            class="stock-input"
+            id="stock-${article.id}"
+            value="${stock}"
+            min="0"
+            onchange="InventaireActions.updateStockDirect('${article.id}', this.value, ${stock})"
+            onkeypress="if(event.key==='Enter') this.blur()"
+          />
+          <label class="stock-label">en stock</label>
         </div>
+
+        <button
+          class="btn-stock-adjust btn-plus"
+          onclick="InventaireActions.ajusterStockRapide('${article.id}', ${stock}, 1)"
+          title="Augmenter le stock"
+        >
+          +
+        </button>
       </div>
 
       <div class="inventaire-article-actions">
         <button
-          class="btn btn-sm btn-primary"
-          onclick="InventaireActions.ajusterStock('${article.id}', '${article.nom.replace(/'/g, "\\'")}', ${stock})"
+          class="btn btn-sm btn-secondary"
+          onclick="InventaireActions.ajusterStockAvecMotif('${article.id}', '${article.nom.replace(/'/g, "\\'")}', ${stock})"
+          title="Ajustement avec motif"
         >
-          Ajuster
+          📝
         </button>
       </div>
     </div>
@@ -556,12 +581,12 @@ window.InventaireActions = {
    */
   setSearch(value) {
     InventaireScreenState.filter.search = value;
-    this.refreshDisplay();
+    this.refreshArticlesList(); // Seulement la liste, pas tout le DOM
   },
 
   setFilterBoutique(value) {
     InventaireScreenState.filter.boutique = value;
-    this.refreshDisplay();
+    this.refreshArticlesList();
   },
 
   resetFilters() {
@@ -585,9 +610,142 @@ window.InventaireActions = {
   },
 
   /**
-   * Ajustement rapide depuis la liste
+   * Rafraîchit uniquement la liste des articles (sans perdre le focus)
    */
-  ajusterStock(articleId, articleNom, stockActuel) {
+  refreshArticlesList() {
+    const state = InventaireScreenState;
+    const filter = state.filter;
+
+    // Filtrer les articles
+    let articlesFiltered = (state.articles || []).filter(a => a.actif !== false);
+
+    if (filter.boutique !== 'all') {
+      articlesFiltered = articlesFiltered.filter(a => a.boutique === filter.boutique);
+    }
+
+    if (filter.search) {
+      const search = filter.search.toLowerCase();
+      articlesFiltered = articlesFiltered.filter(a =>
+        a.nom?.toLowerCase().includes(search) ||
+        a.categorie?.toLowerCase().includes(search)
+      );
+    }
+
+    articlesFiltered.sort((a, b) => (a.nom || '').localeCompare(b.nom || ''));
+
+    // Mettre à jour les stats
+    const stats = {
+      total: articlesFiltered.length,
+      stockTotal: articlesFiltered.reduce((sum, a) => sum + (a.stock_total || 0), 0)
+    };
+
+    // Mettre à jour uniquement les stats
+    const statTotalEl = document.querySelector('.stat-card-value');
+    const statStockEl = document.querySelectorAll('.stat-card-value')[1];
+    if (statTotalEl) statTotalEl.textContent = stats.total;
+    if (statStockEl) statStockEl.textContent = stats.stockTotal;
+
+    // Mettre à jour la liste
+    const listContainer = document.querySelector('.inventaire-articles-list');
+    if (listContainer) {
+      listContainer.innerHTML = articlesFiltered.map(article => renderInventaireArticleItem(article)).join('');
+    }
+
+    // Gérer l'état vide
+    const cardBody = document.querySelector('.inventaire-liste-screen .card .card-body');
+    if (cardBody && articlesFiltered.length === 0) {
+      cardBody.innerHTML = `
+        <div class="empty-state">
+          <p>Aucun article trouvé</p>
+          ${filter.search || filter.boutique !== 'all' ? `
+            <button class="btn btn-secondary mt-md" onclick="InventaireActions.resetFilters()">
+              Réinitialiser les filtres
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+  },
+
+  /**
+   * Ajustement rapide avec boutons +/-
+   */
+  async ajusterStockRapide(articleId, stockActuel, delta) {
+    const nouvelleQuantite = Math.max(0, stockActuel + delta);
+
+    try {
+      await AjustementStockModel.ajusterStock(
+        articleId,
+        nouvelleQuantite,
+        'Correction',
+        'Ajustement rapide',
+        ''
+      );
+
+      // Mettre à jour localement le stock
+      const article = InventaireScreenState.articles.find(a => a.id === articleId);
+      if (article) {
+        article.stock_total = nouvelleQuantite;
+      }
+
+      // Mettre à jour l'input visuel
+      const input = document.getElementById(`stock-${articleId}`);
+      if (input) {
+        input.value = nouvelleQuantite;
+      }
+
+      UIComponents.showToast(`Stock ${delta > 0 ? 'augmenté' : 'diminué'}`, 'success');
+
+    } catch (error) {
+      console.error('Erreur ajustement rapide:', error);
+      UIComponents.showToast('Erreur : ' + error.message, 'error');
+    }
+  },
+
+  /**
+   * Mise à jour directe du stock par saisie
+   */
+  async updateStockDirect(articleId, nouvelleQuantiteStr, stockActuel) {
+    const nouvelleQuantite = parseInt(nouvelleQuantiteStr) || 0;
+
+    // Si pas de changement, ne rien faire
+    if (nouvelleQuantite === stockActuel) {
+      return;
+    }
+
+    try {
+      await AjustementStockModel.ajusterStock(
+        articleId,
+        nouvelleQuantite,
+        'Correction',
+        'Modification directe',
+        ''
+      );
+
+      // Mettre à jour localement
+      const article = InventaireScreenState.articles.find(a => a.id === articleId);
+      if (article) {
+        article.stock_total = nouvelleQuantite;
+      }
+
+      UIComponents.showToast('Stock mis à jour', 'success');
+
+    } catch (error) {
+      console.error('Erreur mise à jour stock:', error);
+      UIComponents.showToast('Erreur : ' + error.message, 'error');
+
+      // Rétablir la valeur précédente en cas d'erreur
+      const input = document.getElementById(`stock-${articleId}`);
+      if (input) {
+        input.value = stockActuel;
+      }
+    }
+  },
+
+  /**
+   * Ajustement avec motif (ancienne méthode, maintenant optionnelle)
+   */
+  ajusterStockAvecMotif(articleId, articleNom, stockActuel) {
     const types = ['Inventaire', 'Correction', 'Casse', 'Perte', 'Retour', 'Autre'];
 
     UIComponents.showModal(
@@ -619,7 +777,7 @@ window.InventaireActions = {
           />
         </div>
         <div class="form-group">
-          <label for="ajust-motif">Motif *</label>
+          <label for="ajust-motif">Motif (optionnel)</label>
           <input
             type="text"
             id="ajust-motif"
@@ -639,21 +797,16 @@ window.InventaireActions = {
       `,
       [
         { label: 'Annuler', class: 'btn-secondary', onclick: 'UIComponents.closeModal()' },
-        { label: 'Enregistrer', class: 'btn-success', onclick: `InventaireActions.confirmAjusterStock('${articleId}')` }
+        { label: 'Enregistrer', class: 'btn-success', onclick: `InventaireActions.confirmAjusterStockAvecMotif('${articleId}')` }
       ]
     );
   },
 
-  async confirmAjusterStock(articleId) {
+  async confirmAjusterStockAvecMotif(articleId) {
     const type = document.getElementById('ajust-type').value;
     const nouvelleQuantite = parseInt(document.getElementById('ajust-nouvelle-quantite').value) || 0;
-    const motif = document.getElementById('ajust-motif').value.trim();
+    const motif = document.getElementById('ajust-motif').value.trim() || 'Ajustement manuel';
     const notes = document.getElementById('ajust-notes').value.trim();
-
-    if (!motif) {
-      UIComponents.showToast('Veuillez indiquer un motif', 'error');
-      return;
-    }
 
     try {
       UIComponents.closeModal();

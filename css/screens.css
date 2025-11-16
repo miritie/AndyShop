@@ -2002,6 +2002,113 @@
   flex-shrink: 0;
 }
 
+/* Contrôles de stock avec boutons +/- */
+.inventaire-article-stock-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-shrink: 0;
+}
+
+.btn-stock-adjust {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  background-color: white;
+  color: var(--color-text-primary);
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.btn-stock-adjust:hover {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.btn-stock-adjust:active {
+  transform: scale(0.95);
+}
+
+.btn-minus {
+  color: var(--color-error);
+}
+
+.btn-minus:hover {
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.btn-plus {
+  color: var(--color-success);
+}
+
+.btn-plus:hover {
+  background-color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.stock-input-wrapper {
+  text-align: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius-md);
+  min-width: 80px;
+  position: relative;
+}
+
+.stock-input-wrapper.stock-low {
+  background-color: var(--color-error-light);
+}
+
+.stock-input {
+  width: 100%;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  text-align: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  line-height: 1.2;
+  outline: none;
+}
+
+.stock-input::-webkit-outer-spin-button,
+.stock-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.stock-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.stock-input:focus {
+  background-color: white;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.stock-input-wrapper.stock-low .stock-input {
+  color: var(--color-error);
+}
+
+.stock-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+  display: block;
+}
+
+/* Anciens styles stock-display (pour compatibilité) */
 .stock-display {
   text-align: center;
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -2023,12 +2130,6 @@
 
 .stock-display.stock-low .stock-value {
   color: var(--color-error);
-}
-
-.stock-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  margin-top: 2px;
 }
 
 .inventaire-article-actions {
