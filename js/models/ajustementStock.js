@@ -64,7 +64,6 @@ window.AjustementStockModel = {
 
     // Préparer les données de base
     const ajustementData = {
-      article: [data.articleId], // Link to Article record
       type: data.type,
       quantite_avant: data.quantite_avant || 0,
       quantite_apres: data.quantite_apres || 0,
@@ -72,6 +71,12 @@ window.AjustementStockModel = {
       motif: data.motif || '',
       utilisateur: data.utilisateur || 'Admin'
     };
+
+    // Essai 1 : Array format (standard Airtable)
+    // ajustementData.article = [data.articleId];
+
+    // Essai 2 : String format (au cas où)
+    ajustementData.article = data.articleId;
 
     // Airtable Date field (sans heure) attend format YYYY-MM-DD
     const dateAjustement = data.date_ajustement ? new Date(data.date_ajustement) : new Date();
